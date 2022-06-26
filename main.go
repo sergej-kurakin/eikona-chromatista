@@ -25,7 +25,7 @@ func check(err error) {
 
 func main() {
 
-	var processors [9]Processor
+	var processors [12]Processor
 	processors[0] = Processor{suffix: "gray", color_processor: make_gray_color}
 	processors[1] = Processor{suffix: "rbg", color_processor: make_RBG_color}
 	processors[2] = Processor{suffix: "gbr", color_processor: make_GBR_color}
@@ -35,6 +35,9 @@ func main() {
 	processors[6] = Processor{suffix: "gb", color_processor: make_GB_color}
 	processors[7] = Processor{suffix: "rb", color_processor: make_RB_color}
 	processors[8] = Processor{suffix: "rg", color_processor: make_RG_color}
+	processors[9] = Processor{suffix: "r", color_processor: make_R_color}
+	processors[10] = Processor{suffix: "g", color_processor: make_G_color}
+	processors[11] = Processor{suffix: "b", color_processor: make_B_color}
 
 	if len(os.Args) < 2 {
 		log.Fatalln("Image path is required")
@@ -161,6 +164,30 @@ func make_RG_color(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: originalColor.R, G: originalColor.G, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func make_R_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.R, G: 0, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func make_G_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.G, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func make_B_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: 0, B: originalColor.B, A: originalColor.A,
 	}
 	return c
 }
