@@ -12,6 +12,11 @@ import (
 	"sync"
 )
 
+type Processor struct {
+	suffix          string
+	color_processor func(color.Color) color.Color
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)
@@ -19,6 +24,18 @@ func check(err error) {
 }
 
 func main() {
+
+	var processors [9]Processor
+	processors[0] = Processor{suffix: "gray", color_processor: make_gray_color}
+	processors[1] = Processor{suffix: "rbg", color_processor: make_RBG_color}
+	processors[2] = Processor{suffix: "gbr", color_processor: make_GBR_color}
+	processors[3] = Processor{suffix: "grb", color_processor: make_GRB_color}
+	processors[4] = Processor{suffix: "brg", color_processor: make_BRG_color}
+	processors[5] = Processor{suffix: "bgr", color_processor: make_BGR_color}
+	processors[6] = Processor{suffix: "gb", color_processor: make_GB_color}
+	processors[7] = Processor{suffix: "rb", color_processor: make_RB_color}
+	processors[8] = Processor{suffix: "rg", color_processor: make_RG_color}
+
 	if len(os.Args) < 2 {
 		log.Fatalln("Image path is required")
 	}
@@ -34,55 +51,14 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_gray_color, "gray")
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_RBG_color, "rbg")
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_GBR_color, "gbr")
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_GRB_color, "grb")
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_BRG_color, "brg")
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_BGR_color, "bgr")
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_GB_color, "gb")
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_RB_color, "rb")
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		process_image(img, imgPath, make_RG_color, "rg")
-	}()
+	for i := 0; i < len(processors); i++ {
+		wg.Add(1)
+		k := i
+		go func() {
+			defer wg.Done()
+			process_image(img, imgPath, processors[k].color_processor, processors[k].suffix)
+		}()
+	}
 
 	wg.Wait()
 	fmt.Printf("Processing finished\n")
