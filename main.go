@@ -40,6 +40,10 @@ func main() {
 
 	brg(img, imgPath)
 	bgr(img, imgPath)
+
+	gb(img, imgPath)
+	rb(img, imgPath)
+	rg(img, imgPath)
 }
 
 func gbr(img image.Image, imgPath string) {
@@ -69,6 +73,24 @@ func bgr(img image.Image, imgPath string) {
 func rbg(img image.Image, imgPath string) {
 	wImg := process_pixels(img, make_RBG_color)
 	newImgPath := newFileName(imgPath, "rbg")
+	export(newImgPath, wImg)
+}
+
+func gb(img image.Image, imgPath string) {
+	wImg := process_pixels(img, make_GB_color)
+	newImgPath := newFileName(imgPath, "gb")
+	export(newImgPath, wImg)
+}
+
+func rb(img image.Image, imgPath string) {
+	wImg := process_pixels(img, make_RB_color)
+	newImgPath := newFileName(imgPath, "rb")
+	export(newImgPath, wImg)
+}
+
+func rg(img image.Image, imgPath string) {
+	wImg := process_pixels(img, make_RG_color)
+	newImgPath := newFileName(imgPath, "rg")
 	export(newImgPath, wImg)
 }
 
@@ -145,6 +167,30 @@ func make_RBG_color(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: originalColor.R, G: originalColor.B, B: originalColor.G, A: originalColor.A,
+	}
+	return c
+}
+
+func make_GB_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.G, B: originalColor.B, A: originalColor.A,
+	}
+	return c
+}
+
+func make_RB_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.R, G: 0, B: originalColor.B, A: originalColor.A,
+	}
+	return c
+}
+
+func make_RG_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.R, G: originalColor.G, B: 0, A: originalColor.A,
 	}
 	return c
 }
