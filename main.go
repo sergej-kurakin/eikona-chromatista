@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/jpeg"
 	"log"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -25,7 +26,7 @@ func check(err error) {
 
 func main() {
 
-	var processors [12]Processor
+	var processors [13]Processor
 	processors[0] = Processor{suffix: "gray", color_processor: make_gray_color}
 	processors[1] = Processor{suffix: "rbg", color_processor: make_RBG_color}
 	processors[2] = Processor{suffix: "gbr", color_processor: make_GBR_color}
@@ -38,6 +39,7 @@ func main() {
 	processors[9] = Processor{suffix: "r", color_processor: make_R_color}
 	processors[10] = Processor{suffix: "g", color_processor: make_G_color}
 	processors[11] = Processor{suffix: "b", color_processor: make_B_color}
+	processors[12] = Processor{suffix: "rnd", color_processor: make_random_color}
 
 	if len(os.Args) < 2 {
 		log.Fatalln("Image path is required")
@@ -190,6 +192,27 @@ func make_B_color(pixel color.Color) color.Color {
 		R: 0, G: 0, B: originalColor.B, A: originalColor.A,
 	}
 	return c
+}
+
+func make_random_color(pixel color.Color) color.Color {
+
+	var processors [12]func(color.Color) color.Color
+	processors[0] = make_gray_color
+	processors[1] = make_RBG_color
+	processors[2] = make_GBR_color
+	processors[3] = make_GRB_color
+	processors[4] = make_BRG_color
+	processors[5] = make_BGR_color
+	processors[6] = make_GB_color
+	processors[7] = make_RB_color
+	processors[8] = make_RG_color
+	processors[9] = make_R_color
+	processors[10] = make_G_color
+	processors[11] = make_B_color
+
+	processor_num := rand.Intn(len(processors))
+
+	return processors[processor_num](pixel)
 }
 
 func newFileName(imgPath string, suffix string) string {
