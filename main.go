@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 func check(err error) {
@@ -31,19 +32,60 @@ func main() {
 
 	check(err)
 
-	gray(img, imgPath)
+	var wg sync.WaitGroup
 
-	rbg(img, imgPath)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		gray(img, imgPath)
+	}()
 
-	gbr(img, imgPath)
-	grb(img, imgPath)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		rbg(img, imgPath)
+	}()
 
-	brg(img, imgPath)
-	bgr(img, imgPath)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		gbr(img, imgPath)
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		grb(img, imgPath)
+	}()
 
-	gb(img, imgPath)
-	rb(img, imgPath)
-	rg(img, imgPath)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		brg(img, imgPath)
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		bgr(img, imgPath)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		gb(img, imgPath)
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		rb(img, imgPath)
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		rg(img, imgPath)
+	}()
+
+	wg.Wait()
+	fmt.Printf("Processing finished\n")
 }
 
 func gbr(img image.Image, imgPath string) {
