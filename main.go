@@ -43,42 +43,42 @@ func main() {
 }
 
 func gbr(img image.Image, imgPath string) {
-	wImg := make_GBR(img)
+	wImg := make_GBR(img, make_GBR_color)
 	newImgPath := newFileName(imgPath, "gbr")
 	export(newImgPath, wImg)
 }
 
 func grb(img image.Image, imgPath string) {
-	wImg := make_GRB(img)
+	wImg := make_GRB(img, make_GRB_color)
 	newImgPath := newFileName(imgPath, "grb")
 	export(newImgPath, wImg)
 }
 
 func brg(img image.Image, imgPath string) {
-	wImg := make_BRG(img)
+	wImg := make_BRG(img, make_BRG_color)
 	newImgPath := newFileName(imgPath, "brg")
 	export(newImgPath, wImg)
 }
 
 func bgr(img image.Image, imgPath string) {
-	wImg := make_BGR(img)
+	wImg := make_BGR(img, make_BGR_color)
 	newImgPath := newFileName(imgPath, "bgr")
 	export(newImgPath, wImg)
 }
 
 func rbg(img image.Image, imgPath string) {
-	wImg := make_RBG(img)
+	wImg := make_RBG(img, make_RBG_color)
 	newImgPath := newFileName(imgPath, "rbg")
 	export(newImgPath, wImg)
 }
 
 func gray(img image.Image, imgPath string) {
-	wImg := make_gray(img)
+	wImg := make_gray(img, make_gray_color)
 	newImgPath := newFileName(imgPath, "gray")
 	export(newImgPath, wImg)
 }
 
-func make_gray(img image.Image) image.Image {
+func make_gray(img image.Image, fn func(color.Color) color.Color) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -87,16 +87,7 @@ func make_gray(img image.Image) image.Image {
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-			// Offset colors a little, adjust it to your taste
-			r := float64(originalColor.R) * 0.92126
-			g := float64(originalColor.G) * 0.97152
-			b := float64(originalColor.B) * 0.90722
-			// average
-			grey := uint8((r + g + b) / 3)
-			c := color.RGBA{
-				R: grey, G: grey, B: grey, A: originalColor.A,
-			}
+			c := fn(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}
@@ -104,7 +95,21 @@ func make_gray(img image.Image) image.Image {
 	return wImg
 }
 
-func make_GBR(img image.Image) image.Image {
+func make_gray_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	// Offset colors a little, adjust it to your taste
+	r := float64(originalColor.R) * 0.92126
+	g := float64(originalColor.G) * 0.97152
+	b := float64(originalColor.B) * 0.90722
+	// average
+	grey := uint8((r + g + b) / 3)
+	c := color.RGBA{
+		R: grey, G: grey, B: grey, A: originalColor.A,
+	}
+	return c
+}
+
+func make_GBR(img image.Image, fn func(color.Color) color.Color) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -113,10 +118,7 @@ func make_GBR(img image.Image) image.Image {
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-			c := color.RGBA{
-				R: originalColor.G, G: originalColor.B, B: originalColor.R, A: originalColor.A,
-			}
+			c := fn(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}
@@ -124,7 +126,15 @@ func make_GBR(img image.Image) image.Image {
 	return wImg
 }
 
-func make_GRB(img image.Image) image.Image {
+func make_GBR_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.G, G: originalColor.B, B: originalColor.R, A: originalColor.A,
+	}
+	return c
+}
+
+func make_GRB(img image.Image, fn func(color.Color) color.Color) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -133,10 +143,7 @@ func make_GRB(img image.Image) image.Image {
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-			c := color.RGBA{
-				R: originalColor.G, G: originalColor.R, B: originalColor.B, A: originalColor.A,
-			}
+			c := fn(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}
@@ -144,7 +151,15 @@ func make_GRB(img image.Image) image.Image {
 	return wImg
 }
 
-func make_BRG(img image.Image) image.Image {
+func make_GRB_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.G, G: originalColor.R, B: originalColor.B, A: originalColor.A,
+	}
+	return c
+}
+
+func make_BRG(img image.Image, fn func(color.Color) color.Color) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -153,10 +168,7 @@ func make_BRG(img image.Image) image.Image {
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-			c := color.RGBA{
-				R: originalColor.B, G: originalColor.R, B: originalColor.G, A: originalColor.A,
-			}
+			c := fn(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}
@@ -164,7 +176,15 @@ func make_BRG(img image.Image) image.Image {
 	return wImg
 }
 
-func make_BGR(img image.Image) image.Image {
+func make_BRG_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B, G: originalColor.R, B: originalColor.G, A: originalColor.A,
+	}
+	return c
+}
+
+func make_BGR(img image.Image, fn func(color.Color) color.Color) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -173,10 +193,7 @@ func make_BGR(img image.Image) image.Image {
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-			c := color.RGBA{
-				R: originalColor.B, G: originalColor.G, B: originalColor.R, A: originalColor.A,
-			}
+			c := fn(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}
@@ -184,7 +201,15 @@ func make_BGR(img image.Image) image.Image {
 	return wImg
 }
 
-func make_RBG(img image.Image) image.Image {
+func make_BGR_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B, G: originalColor.G, B: originalColor.R, A: originalColor.A,
+	}
+	return c
+}
+
+func make_RBG(img image.Image, fn func(color.Color) color.Color) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -193,15 +218,20 @@ func make_RBG(img image.Image) image.Image {
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-			c := color.RGBA{
-				R: originalColor.R, G: originalColor.B, B: originalColor.G, A: originalColor.A,
-			}
+			c := fn(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}
 
 	return wImg
+}
+
+func make_RBG_color(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.R, G: originalColor.B, B: originalColor.G, A: originalColor.A,
+	}
+	return c
 }
 
 func newFileName(imgPath string, suffix string) string {
