@@ -37,108 +37,60 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		gray(img, imgPath)
+		process_image(img, imgPath, make_gray_color, "gray")
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		rbg(img, imgPath)
+		process_image(img, imgPath, make_RBG_color, "rbg")
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		gbr(img, imgPath)
+		process_image(img, imgPath, make_GBR_color, "gbr")
 	}()
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		grb(img, imgPath)
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		brg(img, imgPath)
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		bgr(img, imgPath)
+		process_image(img, imgPath, make_GRB_color, "grb")
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		gb(img, imgPath)
+		process_image(img, imgPath, make_BRG_color, "brg")
 	}()
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		rb(img, imgPath)
+		process_image(img, imgPath, make_BGR_color, "bgr")
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		process_image(img, imgPath, make_GB_color, "gb")
 	}()
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		rg(img, imgPath)
+		process_image(img, imgPath, make_RB_color, "rb")
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		process_image(img, imgPath, make_RG_color, "rg")
 	}()
 
 	wg.Wait()
 	fmt.Printf("Processing finished\n")
 }
 
-func gbr(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_GBR_color)
-	newImgPath := newFileName(imgPath, "gbr")
-	export(newImgPath, wImg)
-}
-
-func grb(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_GRB_color)
-	newImgPath := newFileName(imgPath, "grb")
-	export(newImgPath, wImg)
-}
-
-func brg(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_BRG_color)
-	newImgPath := newFileName(imgPath, "brg")
-	export(newImgPath, wImg)
-}
-
-func bgr(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_BGR_color)
-	newImgPath := newFileName(imgPath, "bgr")
-	export(newImgPath, wImg)
-}
-
-func rbg(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_RBG_color)
-	newImgPath := newFileName(imgPath, "rbg")
-	export(newImgPath, wImg)
-}
-
-func gb(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_GB_color)
-	newImgPath := newFileName(imgPath, "gb")
-	export(newImgPath, wImg)
-}
-
-func rb(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_RB_color)
-	newImgPath := newFileName(imgPath, "rb")
-	export(newImgPath, wImg)
-}
-
-func rg(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_RG_color)
-	newImgPath := newFileName(imgPath, "rg")
-	export(newImgPath, wImg)
-}
-
-func gray(img image.Image, imgPath string) {
-	wImg := process_pixels(img, make_gray_color)
-	newImgPath := newFileName(imgPath, "gray")
+func process_image(img image.Image, imgPath string, color_processor func(color.Color) color.Color, resultSuffix string) {
+	wImg := process_pixels(img, color_processor)
+	newImgPath := newFileName(imgPath, resultSuffix)
 	export(newImgPath, wImg)
 }
 
