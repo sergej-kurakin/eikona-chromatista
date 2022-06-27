@@ -26,7 +26,7 @@ func check(err error) {
 
 func main() {
 
-	var processors [17]Processor
+	var processors [20]Processor
 	processors[0] = Processor{suffix: "gray", color_processor: make_gray_color}
 	processors[1] = Processor{suffix: "rbg", color_processor: make_RBG_color}
 	processors[2] = Processor{suffix: "gbr", color_processor: make_GBR_color}
@@ -44,6 +44,9 @@ func main() {
 	processors[14] = Processor{suffix: "photometric_graychrome", color_processor: make_photometric_graychrome}
 	processors[15] = Processor{suffix: "photometric_graychrome_negative", color_processor: make_photometric_graychrome_negative}
 	processors[16] = Processor{suffix: "negative", color_processor: make_negative}
+	processors[17] = Processor{suffix: "redscale", color_processor: make_photometric_redscale}
+	processors[18] = Processor{suffix: "greenscale", color_processor: make_photometric_greenscale}
+	processors[19] = Processor{suffix: "bluescale", color_processor: make_photometric_bluescale}
 
 	if len(os.Args) < 2 {
 		log.Fatalln("Image path is required")
@@ -225,6 +228,39 @@ func make_photometric_grayscale(pixel color.Color) color.Color {
 	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
 	c := color.RGBA{
 		R: uint8(Y), G: uint8(Y), B: uint8(Y), A: originalColor.A,
+	}
+
+	return c
+}
+
+func make_photometric_redscale(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	// Y = 0.2126 R + 0.7152 G + 0.0722 B
+	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	c := color.RGBA{
+		R: uint8(Y), G: 0, B: 0, A: originalColor.A,
+	}
+
+	return c
+}
+
+func make_photometric_greenscale(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	// Y = 0.2126 R + 0.7152 G + 0.0722 B
+	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	c := color.RGBA{
+		R: 0, G: uint8(Y), B: 0, A: originalColor.A,
+	}
+
+	return c
+}
+
+func make_photometric_bluescale(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	// Y = 0.2126 R + 0.7152 G + 0.0722 B
+	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	c := color.RGBA{
+		R: 0, G: 0, B: uint8(Y), A: originalColor.A,
 	}
 
 	return c
