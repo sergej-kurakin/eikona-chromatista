@@ -143,10 +143,9 @@ func PhotometricGrayscaleColorProcessor(pixel color.Color) color.Color {
 
 func PhotometricRedscaleColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-	// Y = 0.2126 R + 0.7152 G + 0.0722 B
-	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	luminocity := calculateLuminocity(originalColor)
 	c := color.RGBA{
-		R: uint8(Y), G: 0, B: 0, A: originalColor.A,
+		R: luminocity, G: 0, B: 0, A: originalColor.A,
 	}
 
 	return c
@@ -154,10 +153,9 @@ func PhotometricRedscaleColorProcessor(pixel color.Color) color.Color {
 
 func PhotometricGreenscaleColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-	// Y = 0.2126 R + 0.7152 G + 0.0722 B
-	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	luminocity := calculateLuminocity(originalColor)
 	c := color.RGBA{
-		R: 0, G: uint8(Y), B: 0, A: originalColor.A,
+		R: 0, G: luminocity, B: 0, A: originalColor.A,
 	}
 
 	return c
@@ -165,10 +163,9 @@ func PhotometricGreenscaleColorProcessor(pixel color.Color) color.Color {
 
 func PhotometricBluescaleColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-	// Y = 0.2126 R + 0.7152 G + 0.0722 B
-	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	luminocity := calculateLuminocity(originalColor)
 	c := color.RGBA{
-		R: 0, G: 0, B: uint8(Y), A: originalColor.A,
+		R: 0, G: 0, B: luminocity, A: originalColor.A,
 	}
 
 	return c
@@ -176,10 +173,8 @@ func PhotometricBluescaleColorProcessor(pixel color.Color) color.Color {
 
 func PhotometricGraychromeColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-	// Y = 0.2126 R + 0.7152 G + 0.0722 B
-	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	luminocity := calculateLuminocity(originalColor)
 
-	k := uint8(Y)
 	var c color.RGBA
 
 	// 0 < x <= 64 -- 0
@@ -187,15 +182,15 @@ func PhotometricGraychromeColorProcessor(pixel color.Color) color.Color {
 	// 128 < x <= 192 -- 180
 	// 192 < x <= 255 -- 255
 
-	if k <= 64 {
+	if luminocity <= 64 {
 		c = color.RGBA{
 			R: 0, G: 0, B: 0, A: originalColor.A,
 		}
-	} else if k <= 128 {
+	} else if luminocity <= 128 {
 		c = color.RGBA{
 			R: 85, G: 85, B: 85, A: originalColor.A,
 		}
-	} else if k <= 192 {
+	} else if luminocity <= 192 {
 		c = color.RGBA{
 			R: 180, G: 180, B: 180, A: originalColor.A,
 		}
@@ -219,4 +214,9 @@ func NegativeColorProcessor(pixel color.Color) color.Color {
 func PhotometricGraychromeNegativeColorProcessor(pixel color.Color) color.Color {
 	graychrome_pixel := PhotometricGraychromeColorProcessor(pixel)
 	return NegativeColorProcessor(graychrome_pixel)
+}
+
+func calculateLuminocity(originalColor color.RGBA) uint8 {
+	// Y = 0.2126 R + 0.7152 G + 0.0722 B
+	return uint8(0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B))
 }
