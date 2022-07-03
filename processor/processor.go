@@ -85,6 +85,126 @@ func RGXColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
+func RBXColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.R, G: originalColor.B, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func GRXColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.G, G: originalColor.R, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func GBXColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.G, G: originalColor.B, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func BRXColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B, G: originalColor.R, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func BGXColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B, G: originalColor.G, B: 0, A: originalColor.A,
+	}
+	return c
+}
+
+func RXGColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.R, G: 0, B: originalColor.G, A: originalColor.A,
+	}
+	return c
+}
+
+func GXRColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.G, G: 0, B: originalColor.R, A: originalColor.A,
+	}
+	return c
+}
+
+func GXBColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.G, G: 0, B: originalColor.B, A: originalColor.A,
+	}
+	return c
+}
+
+func BXRColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B, G: 0, B: originalColor.R, A: originalColor.A,
+	}
+	return c
+}
+
+func BXGColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B, G: 0, B: originalColor.G, A: originalColor.A,
+	}
+	return c
+}
+
+func XRGColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.R, B: originalColor.G, A: originalColor.A,
+	}
+	return c
+}
+
+func XRBColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.R, B: originalColor.B, A: originalColor.A,
+	}
+	return c
+}
+
+func XGRColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.G, B: originalColor.R, A: originalColor.A,
+	}
+	return c
+}
+
+func XBRColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.B, B: originalColor.R, A: originalColor.A,
+	}
+	return c
+}
+
+func XBGColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: 0, G: originalColor.B, B: originalColor.G, A: originalColor.A,
+	}
+	return c
+}
+
 func RXXColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
