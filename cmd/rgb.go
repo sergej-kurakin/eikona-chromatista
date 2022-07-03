@@ -3,6 +3,7 @@ package cmd
 import (
 	"image/jpeg"
 	"os"
+	"sync"
 
 	"github.com/sergej-kurakin/eikona-chromatista/processor"
 	"github.com/spf13/cobra"
@@ -14,6 +15,7 @@ func init() {
 	rootCmd.AddCommand(brgCmd)
 	rootCmd.AddCommand(bgrCmd)
 	rootCmd.AddCommand(rbgCmd)
+	rootCmd.AddCommand(rgbAllCmd)
 }
 
 var gbrCmd = &cobra.Command{
@@ -58,6 +60,42 @@ var rbgCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.RBGColorProcessor, "rbg")
+	},
+}
+
+var rgbAllCmd = &cobra.Command{
+	Use:   "rgbAll",
+	Short: "Swap colors from RGB to different combinations",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+
+		var processors [5]Processor
+		processors[0] = Processor{suffix: "rbg", color_processor: processor.RBGColorProcessor}
+		processors[1] = Processor{suffix: "gbr", color_processor: processor.GBRColorProcessor}
+		processors[2] = Processor{suffix: "grb", color_processor: processor.GRBColorProcessor}
+		processors[3] = Processor{suffix: "brg", color_processor: processor.BRGColorProcessor}
+		processors[4] = Processor{suffix: "bgr", color_processor: processor.BGRColorProcessor}
+
+		f, err := os.Open(args[0])
+		check(err)
+		defer f.Close()
+
+		img, err := jpeg.Decode(f)
+
+		check(err)
+
+		var wg sync.WaitGroup
+
+		for i := 0; i < len(processors); i++ {
+			wg.Add(1)
+			k := i
+			go func() {
+				defer wg.Done()
+				process_image(img, args[0], processors[k].color_processor, processors[k].suffix)
+			}()
+		}
+
+		wg.Wait()
 	},
 }
 
