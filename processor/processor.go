@@ -215,6 +215,40 @@ func PhotometricGraychromeNegativeColorProcessor(pixel color.Color) color.Color 
 	return NegativeColorProcessor(graychrome_pixel)
 }
 
+func SepiaColorProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+
+	tr := 0.393*float32(originalColor.R) + 0.769*float32(originalColor.G) + 0.189*float32(originalColor.B)
+	tg := 0.349*float32(originalColor.R) + 0.686*float32(originalColor.G) + 0.168*float32(originalColor.B)
+	tb := 0.272*float32(originalColor.R) + 0.534*float32(originalColor.G) + 0.131*float32(originalColor.B)
+
+	var r uint8 = 0
+	var g uint8 = 0
+	var b uint8 = 0
+
+	if tr > 255 {
+		r = 255
+	} else {
+		r = uint8(tr)
+	}
+	if tg > 255 {
+		g = 255
+	} else {
+		g = uint8(tg)
+	}
+	if tb > 255 {
+		b = 255
+	} else {
+		b = uint8(tb)
+	}
+
+	c := color.RGBA{
+		R: r, G: g, B: b, A: originalColor.A,
+	}
+
+	return c
+}
+
 func calculateLuminocity(originalColor color.RGBA) uint8 {
 	// Y = 0.2126 R + 0.7152 G + 0.0722 B
 	return uint8(0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B))

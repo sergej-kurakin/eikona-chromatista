@@ -80,13 +80,22 @@ var blueCmd = &cobra.Command{
 	},
 }
 
+var sepiaCmd = &cobra.Command{
+	Use:   "sepia",
+	Short: "Swap colors from RGB to sepia",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		rgbProcess(args[0], processor.SepiaColorProcessor, "sepia")
+	},
+}
+
 var monochromeAllCmd = &cobra.Command{
 	Use:   "monochromeAll",
 	Short: "Swap colors from RGB to different monochrome combinations",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		var processors [7]Processor
+		var processors [8]Processor
 		processors[0] = Processor{suffix: "grayscale", color_processor: processor.PhotometricGrayscaleColorProcessor}
 		processors[1] = Processor{suffix: "redscale", color_processor: processor.PhotometricRedscaleColorProcessor}
 		processors[2] = Processor{suffix: "greenscale", color_processor: processor.PhotometricGreenscaleColorProcessor}
@@ -94,6 +103,7 @@ var monochromeAllCmd = &cobra.Command{
 		processors[4] = Processor{suffix: "red", color_processor: processor.RColorProcessor}
 		processors[5] = Processor{suffix: "green", color_processor: processor.GColorProcessor}
 		processors[6] = Processor{suffix: "blue", color_processor: processor.BColorProcessor}
+		processors[7] = Processor{suffix: "sepia", color_processor: processor.SepiaColorProcessor}
 
 		f, err := os.Open(args[0])
 		check(err)
