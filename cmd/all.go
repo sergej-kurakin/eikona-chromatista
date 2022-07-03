@@ -47,7 +47,7 @@ func check(err error) {
 
 func process(imgPath string) {
 
-	var processors [20]Processor
+	var processors [21]Processor
 	processors[0] = Processor{suffix: "gray", color_processor: processor.GrayColorProcessor}
 	processors[1] = Processor{suffix: "rbg", color_processor: processor.RBGColorProcessor}
 	processors[2] = Processor{suffix: "gbr", color_processor: processor.GBRColorProcessor}
@@ -68,6 +68,7 @@ func process(imgPath string) {
 	processors[17] = Processor{suffix: "redscale", color_processor: processor.PhotometricRedscaleColorProcessor}
 	processors[18] = Processor{suffix: "greenscale", color_processor: processor.PhotometricGreenscaleColorProcessor}
 	processors[19] = Processor{suffix: "bluescale", color_processor: processor.PhotometricBluescaleColorProcessor}
+	processors[20] = Processor{suffix: "sepia", color_processor: processor.SepiaColorProcessor}
 
 	f, err := os.Open(imgPath)
 	check(err)
