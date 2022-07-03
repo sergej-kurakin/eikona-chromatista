@@ -65,7 +65,7 @@ func process(imgPath string) {
 	processors[14] = Processor{suffix: "redscale", color_processor: processor.PhotometricRedscaleColorProcessor}
 	processors[15] = Processor{suffix: "greenscale", color_processor: processor.PhotometricGreenscaleColorProcessor}
 	processors[16] = Processor{suffix: "bluescale", color_processor: processor.PhotometricBluescaleColorProcessor}
-	processors[27] = Processor{suffix: "sepia", color_processor: processor.SepiaColorProcessor}
+	processors[17] = Processor{suffix: "sepia", color_processor: processor.SepiaColorProcessor}
 
 	// dualchrome
 	processors[18] = Processor{suffix: "xgb", color_processor: processor.XGBColorProcessor}
