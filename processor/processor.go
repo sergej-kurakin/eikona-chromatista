@@ -132,10 +132,9 @@ func RandomColorProcessor(pixel color.Color) color.Color {
 
 func PhotometricGrayscaleColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
-	// Y = 0.2126 R + 0.7152 G + 0.0722 B
-	Y := 0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B)
+	luminocity := calculateLuminocity(originalColor)
 	c := color.RGBA{
-		R: uint8(Y), G: uint8(Y), B: uint8(Y), A: originalColor.A,
+		R: luminocity, G: luminocity, B: luminocity, A: originalColor.A,
 	}
 
 	return c
