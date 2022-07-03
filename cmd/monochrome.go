@@ -55,7 +55,7 @@ var bluescaleCmd = &cobra.Command{
 
 var redCmd = &cobra.Command{
 	Use:   "red",
-	Short: "Swap colors from RGB to reds",
+	Short: "Limit colors from RGB to reds",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.RColorProcessor, "red")
@@ -64,7 +64,7 @@ var redCmd = &cobra.Command{
 
 var greenCmd = &cobra.Command{
 	Use:   "green",
-	Short: "Swap colors from RGB to green",
+	Short: "Limit colors from RGB to green",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.GColorProcessor, "green")
@@ -73,7 +73,7 @@ var greenCmd = &cobra.Command{
 
 var blueCmd = &cobra.Command{
 	Use:   "blue",
-	Short: "Swap colors from RGB to blue",
+	Short: "Limit colors from RGB to blue",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.BColorProcessor, "blue")
