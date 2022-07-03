@@ -57,9 +57,9 @@ func process(imgPath string) {
 	processors[6] = Processor{suffix: "gb", color_processor: processor.GBColorProcessor}
 	processors[7] = Processor{suffix: "rb", color_processor: processor.RBColorProcessor}
 	processors[8] = Processor{suffix: "rg", color_processor: processor.RGColorProcessor}
-	processors[9] = Processor{suffix: "r", color_processor: processor.RColorProcessor}
-	processors[10] = Processor{suffix: "g", color_processor: processor.GColorProcessor}
-	processors[11] = Processor{suffix: "b", color_processor: processor.BColorProcessor}
+	processors[9] = Processor{suffix: "red", color_processor: processor.RColorProcessor}
+	processors[10] = Processor{suffix: "green", color_processor: processor.GColorProcessor}
+	processors[11] = Processor{suffix: "blue", color_processor: processor.BColorProcessor}
 	processors[12] = Processor{suffix: "rnd", color_processor: processor.RandomColorProcessor}
 	processors[13] = Processor{suffix: "photometric_grayscale", color_processor: processor.PhotometricGrayscaleColorProcessor}
 	processors[14] = Processor{suffix: "photometric_graychrome", color_processor: processor.PhotometricGraychromeColorProcessor}
