@@ -61,7 +61,7 @@ func RBGColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
-func GBColorProcessor(pixel color.Color) color.Color {
+func XGBColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: 0, G: originalColor.G, B: originalColor.B, A: originalColor.A,
@@ -69,7 +69,7 @@ func GBColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
-func RBColorProcessor(pixel color.Color) color.Color {
+func RXBColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: originalColor.R, G: 0, B: originalColor.B, A: originalColor.A,
@@ -77,7 +77,7 @@ func RBColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
-func RGColorProcessor(pixel color.Color) color.Color {
+func RGXColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: originalColor.R, G: originalColor.G, B: 0, A: originalColor.A,
@@ -85,7 +85,7 @@ func RGColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
-func RColorProcessor(pixel color.Color) color.Color {
+func RXXColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: originalColor.R, G: 0, B: 0, A: originalColor.A,
@@ -93,7 +93,7 @@ func RColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
-func GColorProcessor(pixel color.Color) color.Color {
+func XGXColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: 0, G: originalColor.G, B: 0, A: originalColor.A,
@@ -101,7 +101,7 @@ func GColorProcessor(pixel color.Color) color.Color {
 	return c
 }
 
-func BColorProcessor(pixel color.Color) color.Color {
+func XXBColorProcessor(pixel color.Color) color.Color {
 	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
 	c := color.RGBA{
 		R: 0, G: 0, B: originalColor.B, A: originalColor.A,
@@ -118,12 +118,12 @@ func RandomColorProcessor(pixel color.Color) color.Color {
 	processors[3] = GRBColorProcessor
 	processors[4] = BRGColorProcessor
 	processors[5] = BGRColorProcessor
-	processors[6] = GBColorProcessor
-	processors[7] = RBColorProcessor
-	processors[8] = RGColorProcessor
-	processors[9] = RColorProcessor
-	processors[10] = GColorProcessor
-	processors[11] = BColorProcessor
+	processors[6] = XGBColorProcessor
+	processors[7] = RXBColorProcessor
+	processors[8] = RGXColorProcessor
+	processors[9] = RXXColorProcessor
+	processors[10] = XGXColorProcessor
+	processors[11] = XXBColorProcessor
 
 	processor_num := rand.Intn(len(processors))
 

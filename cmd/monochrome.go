@@ -58,7 +58,7 @@ var redCmd = &cobra.Command{
 	Short: "Limit colors from RGB to reds",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RColorProcessor, "red")
+		rgbProcess(args[0], processor.RXXColorProcessor, "red")
 	},
 }
 
@@ -67,7 +67,7 @@ var greenCmd = &cobra.Command{
 	Short: "Limit colors from RGB to green",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GColorProcessor, "green")
+		rgbProcess(args[0], processor.XGXColorProcessor, "green")
 	},
 }
 
@@ -76,7 +76,7 @@ var blueCmd = &cobra.Command{
 	Short: "Limit colors from RGB to blue",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BColorProcessor, "blue")
+		rgbProcess(args[0], processor.XXBColorProcessor, "blue")
 	},
 }
 
@@ -100,9 +100,9 @@ var monochromeAllCmd = &cobra.Command{
 		processors[1] = Processor{suffix: "redscale", color_processor: processor.PhotometricRedscaleColorProcessor}
 		processors[2] = Processor{suffix: "greenscale", color_processor: processor.PhotometricGreenscaleColorProcessor}
 		processors[3] = Processor{suffix: "bluescale", color_processor: processor.PhotometricBluescaleColorProcessor}
-		processors[4] = Processor{suffix: "red", color_processor: processor.RColorProcessor}
-		processors[5] = Processor{suffix: "green", color_processor: processor.GColorProcessor}
-		processors[6] = Processor{suffix: "blue", color_processor: processor.BColorProcessor}
+		processors[4] = Processor{suffix: "red", color_processor: processor.RXXColorProcessor}
+		processors[5] = Processor{suffix: "green", color_processor: processor.XGXColorProcessor}
+		processors[6] = Processor{suffix: "blue", color_processor: processor.XXBColorProcessor}
 		processors[7] = Processor{suffix: "sepia", color_processor: processor.SepiaColorProcessor}
 
 		f, err := os.Open(args[0])
