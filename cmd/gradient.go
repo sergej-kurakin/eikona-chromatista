@@ -105,6 +105,45 @@ var generateCmd = &cobra.Command{
 			}
 		}
 
+		for x := 512; x < 768; x++ {
+			for y := 0; y < 256; y++ {
+				bg := color.RGBA{
+					R: 255, G: 0, B: 0, A: 255,
+				}
+				fg := color.RGBA{
+					R: 0, G: 255, B: 0, A: 255,
+				}
+
+				fgA := float32(fg.A)
+				bgA := float32(bg.A)
+
+				fgR := float32(fg.R)
+				fgG := float32(fg.G)
+				fgB := float32(fg.B)
+
+				bgR := float32(bg.R)
+				bgG := float32(bg.G)
+				bgB := float32(bg.B)
+
+				a := (1-fgA/255)*(bgA/255) + (fgA / 255)
+
+				r := ((1-fgA/255)*(bgA/255)*(bgR/255) + fgA/255*fgR/255) / a
+				g := ((1-fgA/255)*(bgA/255)*(bgG/255) + fgA/255*fgG/255) / a
+				b := ((1-fgA/255)*(bgA/255)*(bgB/255) + fgA/255*fgB/255) / a
+
+				a = a * 255
+				r = r * 255
+				g = g * 255
+				b = b * 255
+
+				c := color.RGBA{
+					R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a),
+				}
+
+				wImg.Set(x, y, c)
+			}
+		}
+
 		fg, err := os.Create(args[0])
 		defer fg.Close()
 		check(err)
