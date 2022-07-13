@@ -25,50 +25,79 @@ var generateCmd = &cobra.Command{
 		rect := image.Rect(0, 0, size.X, size.Y)
 		wImg := image.NewRGBA(rect)
 
-		for x := 0; x < size.X; x++ {
-			// and now loop thorough all of this x's y
-			for y := 0; y < size.Y; y++ {
-				c := color.RGBA{
-					R: 130, G: 130, B: 130, A: 255,
-				}
-				wImg.Set(x, y, c)
-			}
+		c := color.RGBA{
+			R: 130, G: 130, B: 130, A: 255,
 		}
 
-		for x := 0; x < 256; x++ {
-			// and now loop thorough all of this x's y
-			for y := 0; y < 256; y++ {
-				c := color.RGBA{
-					R: uint8(y), G: uint8(y), B: uint8(y), A: 255,
-				}
-				wImg.Set(x, y, c)
-			}
+		fillWithGray(*wImg, c, size.X, size.Y)
 
-			for y := 256; y < 512; y++ {
-				code := uint8(y - 256)
-				c := color.RGBA{
-					R: code, G: 0, B: 0, A: 255,
-				}
-				wImg.Set(x, y, c)
-			}
+		drawBtoWVerticalGradient(*wImg, 0, 256, 0, 256)
 
-			for y := 512; y < 768; y++ {
-				code := uint8(y - 512)
-				c := color.RGBA{
-					R: 0, G: code, B: 0, A: 255,
-				}
-				wImg.Set(x, y, c)
-			}
-
-			for y := 768; y < 1024; y++ {
-				code := uint8(y - 768)
-				c := color.RGBA{
-					R: 0, G: 0, B: code, A: 255,
-				}
-				wImg.Set(x, y, c)
-			}
-
+		rg1 := color.RGBA{
+			R: 0, G: 0, B: 0, A: 255,
 		}
+		rg2 := color.RGBA{
+			R: 255, G: 0, B: 0, A: 255,
+		}
+
+		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+			code := uint8(y - 256)
+			steps := 256
+
+			ratio := float32(code) / float32(steps)
+
+			r := float32(rg1.R)*ratio + float32(rg2.R)*(1-ratio)
+			g := float32(rg1.G)*ratio + float32(rg2.G)*(1-ratio)
+			b := float32(rg1.B)*ratio + float32(rg2.B)*(1-ratio)
+
+			return color.RGBA{
+				R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
+			}
+		}, 0, 256, 256, 512)
+
+		gg1 := color.RGBA{
+			R: 0, G: 0, B: 0, A: 255,
+		}
+		gg2 := color.RGBA{
+			R: 0, G: 255, B: 0, A: 255,
+		}
+
+		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+			code := uint8(y - 512)
+			steps := 256
+
+			ratio := float32(code) / float32(steps)
+
+			r := float32(gg1.R)*ratio + float32(gg2.R)*(1-ratio)
+			g := float32(gg1.G)*ratio + float32(gg2.G)*(1-ratio)
+			b := float32(gg1.B)*ratio + float32(gg2.B)*(1-ratio)
+
+			return color.RGBA{
+				R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
+			}
+		}, 0, 256, 512, 768)
+
+		bg1 := color.RGBA{
+			R: 0, G: 0, B: 0, A: 255,
+		}
+		bg2 := color.RGBA{
+			R: 0, G: 0, B: 255, A: 255,
+		}
+
+		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+			code := uint8(y - 768)
+			steps := 256
+
+			ratio := float32(code) / float32(steps)
+
+			r := float32(bg1.R)*ratio + float32(bg2.R)*(1-ratio)
+			g := float32(bg1.G)*ratio + float32(bg2.G)*(1-ratio)
+			b := float32(bg1.B)*ratio + float32(bg2.B)*(1-ratio)
+
+			return color.RGBA{
+				R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
+			}
+		}, 0, 256, 768, 1024)
 
 		// firstColor := color.RGBA{
 		// 	R: 0, G: 0, B: 0, A: 255,
@@ -88,24 +117,43 @@ var generateCmd = &cobra.Command{
 
 		steps := size.Y
 
-		for x := 256; x < 512; x++ {
-			for y := 0; y < size.Y; y++ {
+		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+			ratio := float32(y) / float32(steps)
 
-				ratio := float32(y) / float32(steps)
+			r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)
+			g := float32(firstColor.G)*ratio + float32(secondColor.G)*(1-ratio)
+			b := float32(firstColor.B)*ratio + float32(secondColor.B)*(1-ratio)
 
-				r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)
-				g := float32(firstColor.G)*ratio + float32(secondColor.G)*(1-ratio)
-				b := float32(firstColor.B)*ratio + float32(secondColor.B)*(1-ratio)
-
-				c := color.RGBA{
-					R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
-				}
-
-				wImg.Set(x, y, c)
+			return color.RGBA{
+				R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
 			}
-		}
+		}, 256, 512, 0, size.Y)
 
-		for x := 512; x < 768; x++ {
+		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+			ratio := float32(x-512) / float32(256)
+
+			r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)
+			g := float32(firstColor.G)*ratio + float32(secondColor.G)*(1-ratio)
+			b := float32(firstColor.B)*ratio + float32(secondColor.B)*(1-ratio)
+
+			return color.RGBA{
+				R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
+			}
+		}, 512, 768, 0, 256)
+
+		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+			ratio := float32(x-512) / float32(256)
+
+			r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)
+			g := float32(firstColor.G)*ratio + float32(secondColor.G)*(1-ratio)
+			b := float32(firstColor.B)*ratio + float32(secondColor.B)*(1-ratio)
+
+			return color.RGBA{
+				R: uint8(r), G: uint8(g), B: uint8(b), A: 255,
+			}
+		}, 512, 768, 512, 768)
+
+		for x := 768; x < 1024; x++ {
 			for y := 0; y < 256; y++ {
 				bg := color.RGBA{
 					R: 255, G: 0, B: 0, A: 255,
@@ -150,4 +198,34 @@ var generateCmd = &cobra.Command{
 		err = jpeg.Encode(fg, wImg, &jpeg.Options{Quality: 100})
 		check(err)
 	},
+}
+
+func fillWithGray(wImg image.RGBA, bgColor color.RGBA, X int, Y int) {
+	for x := 0; x < X; x++ {
+		for y := 0; y < Y; y++ {
+
+			wImg.Set(x, y, bgColor)
+		}
+	}
+}
+
+func drawBtoWVerticalGradient(wImg image.RGBA, x1 int, x2 int, y1 int, y2 int) {
+	for x := x1; x < x2; x++ {
+		// and now loop thorough all of this x's y
+		for y := y1; y < y2; y++ {
+			c := color.RGBA{
+				R: uint8(y), G: uint8(y), B: uint8(y), A: 255,
+			}
+			wImg.Set(x, y, c)
+		}
+	}
+}
+
+func fillRectangle(wImg image.RGBA, colorCalc func(x int, y int) color.RGBA, x1 int, x2 int, y1 int, y2 int) {
+	for x := x1; x < x2; x++ {
+		for y := y1; y < y2; y++ {
+			c := colorCalc(x, y)
+			wImg.Set(x, y, c)
+		}
+	}
 }
