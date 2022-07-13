@@ -15,22 +15,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Source string
-
 func init() {
 	rootCmd.AddCommand(allCmd)
-	allCmd.Flags().StringVarP(&Source, "source", "s", "", "Source image file to read from")
-	allCmd.MarkFlagRequired("source")
 }
 
 var allCmd = &cobra.Command{
 	Use:   "all",
 	Short: "Make all Image Color Manipulations",
 	Long:  `Make all Image Color Manipulations, bla... bla... bla...`,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("All")
-		fmt.Println("Source:", Source)
-		process(Source)
+		process(args[0])
 	},
 }
 
