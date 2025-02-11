@@ -373,3 +373,14 @@ func calculateLuminocity(originalColor color.RGBA) uint8 {
 	// Y = 0.2126 R + 0.7152 G + 0.0722 B
 	return uint8(0.2126*float32(originalColor.R) + 0.7152*float32(originalColor.G) + 0.0722*float32(originalColor.B))
 }
+
+func InfraredProcessor(pixel color.Color) color.Color {
+	originalColor := color.RGBAModel.Convert(pixel).(color.RGBA)
+	c := color.RGBA{
+		R: originalColor.B,
+		G: originalColor.G,
+		B: originalColor.R,
+		A: originalColor.A,
+	}
+	return c
+}
