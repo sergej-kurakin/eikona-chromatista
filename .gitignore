@@ -1,2 +1,6 @@
 .DS_Store
 vendor/
+samples/DSC_0251_*
+samples/DSC_0252_*
+samples/DSC_0259_*
+samples/DSC_0310_*
