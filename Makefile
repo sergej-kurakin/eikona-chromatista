@@ -20,6 +20,11 @@ help:
 fmt: deps
 	go fmt ./...
 
+## lint: run golangci-lint
+.PHONY: lint
+lint: deps
+	golangci-lint run
+
 ## deps: tidy modfiles and fill vendors
 .PHONY: deps
 deps:
