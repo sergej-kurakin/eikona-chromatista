@@ -18,7 +18,7 @@ var generateCmd = &cobra.Command{
 	Use:   "gradient",
 	Short: "Gradient some sample colors",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		fmt.Println("Creating gradients")
 
 		size := image.Point{X: 1024, Y: 1024}
@@ -40,7 +40,7 @@ var generateCmd = &cobra.Command{
 			R: 255, G: 0, B: 0, A: 255,
 		}
 
-		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+		fillRectangle(*wImg, func(_, y int) color.RGBA {
 			code := uint8(y - 256)
 			steps := 256
 
@@ -62,7 +62,7 @@ var generateCmd = &cobra.Command{
 			R: 0, G: 255, B: 0, A: 255,
 		}
 
-		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+		fillRectangle(*wImg, func(_, y int) color.RGBA {
 			code := uint8(y - 512)
 			steps := 256
 
@@ -84,7 +84,7 @@ var generateCmd = &cobra.Command{
 			R: 0, G: 0, B: 255, A: 255,
 		}
 
-		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+		fillRectangle(*wImg, func(_, y int) color.RGBA {
 			code := uint8(y - 768)
 			steps := 256
 
@@ -117,7 +117,7 @@ var generateCmd = &cobra.Command{
 
 		steps := size.Y
 
-		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+		fillRectangle(*wImg, func(_, y int) color.RGBA {
 			ratio := float32(y) / float32(steps)
 
 			r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)
@@ -129,7 +129,7 @@ var generateCmd = &cobra.Command{
 			}
 		}, 256, 512, 0, size.Y)
 
-		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+		fillRectangle(*wImg, func(x, _ int) color.RGBA {
 			ratio := float32(x-512) / float32(256)
 
 			r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)
@@ -141,7 +141,7 @@ var generateCmd = &cobra.Command{
 			}
 		}, 512, 768, 0, 256)
 
-		fillRectangle(*wImg, func(x int, y int) color.RGBA {
+		fillRectangle(*wImg, func(x, _ int) color.RGBA {
 			ratio := float32(x-512) / float32(256)
 
 			r := float32(firstColor.R)*ratio + float32(secondColor.R)*(1-ratio)

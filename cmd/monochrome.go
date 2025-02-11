@@ -99,14 +99,14 @@ var monochromeAllCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
 		var processors [8]Processor
-		processors[0] = Processor{suffix: "grayscale", color_processor: processor.PhotometricGrayscaleColorProcessor}
-		processors[1] = Processor{suffix: "redscale", color_processor: processor.PhotometricRedscaleColorProcessor}
-		processors[2] = Processor{suffix: "greenscale", color_processor: processor.PhotometricGreenscaleColorProcessor}
-		processors[3] = Processor{suffix: "bluescale", color_processor: processor.PhotometricBluescaleColorProcessor}
-		processors[4] = Processor{suffix: "red", color_processor: processor.RXXColorProcessor}
-		processors[5] = Processor{suffix: "green", color_processor: processor.XGXColorProcessor}
-		processors[6] = Processor{suffix: "blue", color_processor: processor.XXBColorProcessor}
-		processors[7] = Processor{suffix: "sepia", color_processor: processor.SepiaColorProcessor}
+		processors[0] = Processor{suffix: "grayscale", colorProcessor: processor.PhotometricGrayscaleColorProcessor}
+		processors[1] = Processor{suffix: "redscale", colorProcessor: processor.PhotometricRedscaleColorProcessor}
+		processors[2] = Processor{suffix: "greenscale", colorProcessor: processor.PhotometricGreenscaleColorProcessor}
+		processors[3] = Processor{suffix: "bluescale", colorProcessor: processor.PhotometricBluescaleColorProcessor}
+		processors[4] = Processor{suffix: "red", colorProcessor: processor.RXXColorProcessor}
+		processors[5] = Processor{suffix: "green", colorProcessor: processor.XGXColorProcessor}
+		processors[6] = Processor{suffix: "blue", colorProcessor: processor.XXBColorProcessor}
+		processors[7] = Processor{suffix: "sepia", colorProcessor: processor.SepiaColorProcessor}
 
 		f, err := os.Open(args[0])
 		check(err)
@@ -123,7 +123,7 @@ var monochromeAllCmd = &cobra.Command{
 			k := i
 			go func() {
 				defer wg.Done()
-				process_image(img, args[0], processors[k].color_processor, processors[k].suffix)
+				processImage(img, args[0], processors[k].colorProcessor, processors[k].suffix)
 			}()
 		}
 
