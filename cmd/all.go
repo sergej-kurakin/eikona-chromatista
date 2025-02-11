@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-
 	"image"
 	"image/color"
 	"image/jpeg"
@@ -41,7 +40,6 @@ func check(err error) {
 }
 
 func process(imgPath string) {
-
 	var processors [36]Processor
 	processors[0] = Processor{suffix: "gray", color_processor: processor.GrayColorProcessor}
 	processors[1] = Processor{suffix: "rbg", color_processor: processor.RBGColorProcessor}
