@@ -22,7 +22,7 @@ var gbrCmd = &cobra.Command{
 	Use:   "gbr",
 	Short: "Swap colors from RGB to GBR",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.GBRColorProcessor, "gbr")
 	},
 }
@@ -31,7 +31,7 @@ var grbCmd = &cobra.Command{
 	Use:   "grb",
 	Short: "Swap colors from RGB to GRB",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.GRBColorProcessor, "grb")
 	},
 }
@@ -40,7 +40,7 @@ var brgCmd = &cobra.Command{
 	Use:   "brg",
 	Short: "Swap colors from RGB to BRG",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.BRGColorProcessor, "brg")
 	},
 }
@@ -49,7 +49,7 @@ var bgrCmd = &cobra.Command{
 	Use:   "bgr",
 	Short: "Swap colors from RGB to BGR",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.BGRColorProcessor, "bgr")
 	},
 }
@@ -58,7 +58,7 @@ var rbgCmd = &cobra.Command{
 	Use:   "rbg",
 	Short: "Swap colors from RGB to RBG",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.RBGColorProcessor, "rbg")
 	},
 }
@@ -67,8 +67,7 @@ var rgbAllCmd = &cobra.Command{
 	Use:   "rgbAll",
 	Short: "Swap colors from RGB to different combinations",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-
+	Run: func(_ *cobra.Command, args []string) {
 		var processors [5]Processor
 		processors[0] = Processor{suffix: "rbg", color_processor: processor.RBGColorProcessor}
 		processors[1] = Processor{suffix: "gbr", color_processor: processor.GBRColorProcessor}
@@ -99,7 +98,7 @@ var rgbAllCmd = &cobra.Command{
 	},
 }
 
-func rgbProcess(imgPath string, processorFunc processor.ProcessorFunc, suffix string) {
+func rgbProcess(imgPath string, processorFunc processor.ColorProcessor, suffix string) {
 	f, err := os.Open(imgPath)
 	check(err)
 	defer f.Close()

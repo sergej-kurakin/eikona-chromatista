@@ -31,7 +31,7 @@ var allCmd = &cobra.Command{
 
 type Processor struct {
 	suffix          string
-	color_processor processor.ProcessorFunc
+	color_processor processor.ColorProcessor
 }
 
 func check(err error) {
@@ -105,13 +105,13 @@ func process(imgPath string) {
 	fmt.Printf("Processing finished\n")
 }
 
-func process_image(img image.Image, imgPath string, color_processor func(color.Color) color.Color, resultSuffix string) {
+func process_image(img image.Image, imgPath string, color_processor processor.ColorProcessor, resultSuffix string) {
 	wImg := process_pixels(img, color_processor)
 	newImgPath := newFileName(imgPath, resultSuffix)
 	export(newImgPath, wImg)
 }
 
-func process_pixels(img image.Image, color_processor func(color.Color) color.Color) image.Image {
+func process_pixels(img image.Image, color_processor processor.ColorProcessor) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -120,7 +120,7 @@ func process_pixels(img image.Image, color_processor func(color.Color) color.Col
 		// and now loop thorough all of this x's y
 		for y := 0; y < size.Y; y++ {
 			pixel := img.At(x, y)
-			c := color_processor(color.RGBAModel.Convert(pixel).(color.RGBA))
+			c, _ := color_processor(color.RGBAModel.Convert(pixel).(color.RGBA))
 			wImg.Set(x, y, c)
 		}
 	}

@@ -179,10 +179,10 @@ var generateCmd = &cobra.Command{
 				g := ((1-fgA/255)*(bgA/255)*(bgG/255) + fgA/255*fgG/255) / a
 				b := ((1-fgA/255)*(bgA/255)*(bgB/255) + fgA/255*fgB/255) / a
 
-				a = a * 255
-				r = r * 255
-				g = g * 255
-				b = b * 255
+				a *= 255
+				r *= 255
+				g *= 255
+				b *= 255
 
 				c := color.RGBA{
 					R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a),
@@ -193,23 +193,22 @@ var generateCmd = &cobra.Command{
 		}
 
 		fg, err := os.Create(args[0])
-		defer fg.Close()
 		check(err)
+		defer fg.Close()
 		err = jpeg.Encode(fg, wImg, &jpeg.Options{Quality: 100})
 		check(err)
 	},
 }
 
-func fillWithGray(wImg image.RGBA, bgColor color.RGBA, X int, Y int) {
+func fillWithGray(wImg image.RGBA, bgColor color.RGBA, X, Y int) {
 	for x := 0; x < X; x++ {
 		for y := 0; y < Y; y++ {
-
 			wImg.Set(x, y, bgColor)
 		}
 	}
 }
 
-func drawBtoWVerticalGradient(wImg image.RGBA, x1 int, x2 int, y1 int, y2 int) {
+func drawBtoWVerticalGradient(wImg image.RGBA, x1, x2, y1, y2 int) {
 	for x := x1; x < x2; x++ {
 		// and now loop thorough all of this x's y
 		for y := y1; y < y2; y++ {
@@ -221,7 +220,7 @@ func drawBtoWVerticalGradient(wImg image.RGBA, x1 int, x2 int, y1 int, y2 int) {
 	}
 }
 
-func fillRectangle(wImg image.RGBA, colorCalc func(x int, y int) color.RGBA, x1 int, x2 int, y1 int, y2 int) {
+func fillRectangle(wImg image.RGBA, colorCalc func(x, y int) color.RGBA, x1, x2, y1, y2 int) {
 	for x := x1; x < x2; x++ {
 		for y := y1; y < y2; y++ {
 			c := colorCalc(x, y)

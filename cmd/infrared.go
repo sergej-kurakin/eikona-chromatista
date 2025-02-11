@@ -39,7 +39,7 @@ var infraredCmd = &cobra.Command{
 	Use:   "infrared",
 	Short: "Infrared Experiments",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		rgbProcess(args[0], processor.InfraredProcessor, "infrared")
 	},
 }
@@ -48,9 +48,8 @@ var infrared2Cmd = &cobra.Command{
 	Use:   "infrared2",
 	Short: "Infrared 2 Experiments",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		src, err := imaging.Open(args[0])
-
 		if err != nil {
 			log.Fatalf("failed to open image: %v", err)
 		}
