@@ -3,6 +3,7 @@ package cmd
 import (
 	"image/jpeg"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/sergej-kurakin/eikona-chromatista/processor"
@@ -77,7 +78,7 @@ var rgbAllCmd = &cobra.Command{
 
 		f, err := os.Open(args[0])
 		check(err)
-		defer f.Close()
+		defer f.Close() //nolint:errcheck // ignore error for defer close
 
 		img, err := jpeg.Decode(f)
 
@@ -99,9 +100,9 @@ var rgbAllCmd = &cobra.Command{
 }
 
 func rgbProcess(imgPath string, processorFunc processor.ColorProcessor, suffix string) {
-	f, err := os.Open(imgPath)
+	f, err := os.Open(filepath.Clean(imgPath))
 	check(err)
-	defer f.Close()
+	defer f.Close() //nolint:errcheck // ignore error for defer close
 
 	img, err := jpeg.Decode(f)
 

@@ -194,7 +194,7 @@ var generateCmd = &cobra.Command{
 
 		fg, err := os.Create(args[0])
 		check(err)
-		defer fg.Close()
+		defer fg.Close() //nolint:errcheck // ignore error for defer close
 		err = jpeg.Encode(fg, wImg, &jpeg.Options{Quality: 100})
 		check(err)
 	},

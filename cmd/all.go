@@ -80,9 +80,9 @@ func process(imgPath string) {
 	processors[34] = Processor{suffix: "xbr", colorProcessor: processor.XBRColorProcessor}
 	processors[35] = Processor{suffix: "xbg", colorProcessor: processor.XBGColorProcessor}
 
-	f, err := os.Open(imgPath)
+	f, err := os.Open(filepath.Clean(imgPath))
 	check(err)
-	defer f.Close()
+	defer f.Close() //nolint:errcheck // ignore error for defer close
 
 	img, err := jpeg.Decode(f)
 
@@ -142,9 +142,9 @@ func newFileName(imgPath, suffix string) string {
 }
 
 func export(newImagePath string, wImg image.Image) {
-	fg, err := os.Create(newImagePath)
+	fg, err := os.Create(filepath.Clean(newImagePath))
 	check(err)
-	defer fg.Close()
+	defer fg.Close() //nolint:errcheck // ignore error for defer close
 	err = jpeg.Encode(fg, wImg, &jpeg.Options{Quality: 100})
 	check(err)
 }

@@ -227,7 +227,7 @@ var dualchromeAllCmd = &cobra.Command{
 
 		f, err := os.Open(args[0])
 		check(err)
-		defer f.Close()
+		defer f.Close() //nolint:errcheck // ignore error for defer close
 
 		img, err := jpeg.Decode(f)
 
