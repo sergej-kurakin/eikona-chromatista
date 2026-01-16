@@ -253,7 +253,7 @@ formatters:
     - gofmt
     - gofumpt
     - goimports
- 
+
 # See also https://gist.github.com/cristaloleg/dc29ca0ef2fb554de28d94c3c6f6dc88
 
 output:
