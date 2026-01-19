@@ -14,7 +14,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of Eikona Chromatista",
 	Long:  `All software has versions. This is Eikona Chromatista's`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println("Eikona Chromatista (Εικόνα Χρωματιστά) Image Color Manipulation v0.0.0")
 	},
 }
