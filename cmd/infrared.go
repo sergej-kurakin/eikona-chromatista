@@ -40,7 +40,7 @@ var infraredCmd = &cobra.Command{
 	Short: "Infrared Experiments",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.InfraredProcessor, "infrared")
+		rgbProcess(args[0], processor.NewInfraredProcessor())
 	},
 }
 

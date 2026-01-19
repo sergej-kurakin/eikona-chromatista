@@ -28,11 +28,6 @@ var allCmd = &cobra.Command{
 	},
 }
 
-type Processor struct {
-	suffix         string
-	colorProcessor processor.ColorProcessor
-}
-
 func check(err error) {
 	if err != nil {
 		panic(err)
@@ -40,45 +35,45 @@ func check(err error) {
 }
 
 func process(imgPath string) {
-	var processors [36]Processor
-	processors[0] = Processor{suffix: "gray", colorProcessor: processor.GrayColorProcessor}
-	processors[1] = Processor{suffix: "rbg", colorProcessor: processor.RBGColorProcessor}
-	processors[2] = Processor{suffix: "gbr", colorProcessor: processor.GBRColorProcessor}
-	processors[3] = Processor{suffix: "grb", colorProcessor: processor.GRBColorProcessor}
-	processors[4] = Processor{suffix: "brg", colorProcessor: processor.BRGColorProcessor}
-	processors[5] = Processor{suffix: "bgr", colorProcessor: processor.BGRColorProcessor}
-	processors[6] = Processor{suffix: "red", colorProcessor: processor.RXXColorProcessor}
-	processors[7] = Processor{suffix: "green", colorProcessor: processor.XGXColorProcessor}
-	processors[8] = Processor{suffix: "blue", colorProcessor: processor.XXBColorProcessor}
-	processors[9] = Processor{suffix: "rnd", colorProcessor: processor.RandomColorProcessor}
-	processors[10] = Processor{suffix: "photometric_grayscale", colorProcessor: processor.PhotometricGrayscaleColorProcessor}
-	processors[11] = Processor{suffix: "photometric_graychrome", colorProcessor: processor.PhotometricGraychromeColorProcessor}
-	processors[12] = Processor{suffix: "photometric_graychrome_negative", colorProcessor: processor.PhotometricGraychromeNegativeColorProcessor}
-	processors[13] = Processor{suffix: "negative", colorProcessor: processor.NegativeColorProcessor}
-	processors[14] = Processor{suffix: "redscale", colorProcessor: processor.PhotometricRedscaleColorProcessor}
-	processors[15] = Processor{suffix: "greenscale", colorProcessor: processor.PhotometricGreenscaleColorProcessor}
-	processors[16] = Processor{suffix: "bluescale", colorProcessor: processor.PhotometricBluescaleColorProcessor}
-	processors[17] = Processor{suffix: "sepia", colorProcessor: processor.SepiaColorProcessor}
-
-	// dualchrome
-	processors[18] = Processor{suffix: "xgb", colorProcessor: processor.XGBColorProcessor}
-	processors[19] = Processor{suffix: "rxb", colorProcessor: processor.RXBColorProcessor}
-	processors[20] = Processor{suffix: "rgx", colorProcessor: processor.RGXColorProcessor}
-	processors[21] = Processor{suffix: "rbx", colorProcessor: processor.RBXColorProcessor}
-	processors[22] = Processor{suffix: "grx", colorProcessor: processor.GRXColorProcessor}
-	processors[23] = Processor{suffix: "gbx", colorProcessor: processor.GBXColorProcessor}
-	processors[24] = Processor{suffix: "brx", colorProcessor: processor.BRXColorProcessor}
-	processors[25] = Processor{suffix: "bgx", colorProcessor: processor.BGXColorProcessor}
-	processors[26] = Processor{suffix: "rxg", colorProcessor: processor.RXGColorProcessor}
-	processors[27] = Processor{suffix: "gxr", colorProcessor: processor.GXRColorProcessor}
-	processors[28] = Processor{suffix: "gxb", colorProcessor: processor.GXBColorProcessor}
-	processors[29] = Processor{suffix: "bxr", colorProcessor: processor.BXRColorProcessor}
-	processors[30] = Processor{suffix: "bxg", colorProcessor: processor.BXGColorProcessor}
-	processors[31] = Processor{suffix: "xrg", colorProcessor: processor.XRGColorProcessor}
-	processors[32] = Processor{suffix: "xrb", colorProcessor: processor.XRBColorProcessor}
-	processors[33] = Processor{suffix: "xgr", colorProcessor: processor.XGRColorProcessor}
-	processors[34] = Processor{suffix: "xbr", colorProcessor: processor.XBRColorProcessor}
-	processors[35] = Processor{suffix: "xbg", colorProcessor: processor.XBGColorProcessor}
+	processors := []processor.Processor{
+		processor.NewGrayProcessor(),
+		processor.NewRBGProcessor(),
+		processor.NewGBRProcessor(),
+		processor.NewGRBProcessor(),
+		processor.NewBRGProcessor(),
+		processor.NewBGRProcessor(),
+		processor.NewRXXProcessor(),
+		processor.NewXGXProcessor(),
+		processor.NewXXBProcessor(),
+		processor.NewRandomProcessor(nil),
+		processor.NewPhotometricGrayscaleProcessor(nil),
+		processor.NewPhotometricGraychromeProcessor(nil),
+		processor.NewPhotometricGraychromeNegativeProcessor(nil, nil),
+		processor.NewNegativeProcessor(),
+		processor.NewPhotometricRedscaleProcessor(nil),
+		processor.NewPhotometricGreenscaleProcessor(nil),
+		processor.NewPhotometricBluescaleProcessor(nil),
+		processor.NewSepiaProcessor(),
+		// dualchrome
+		processor.NewXGBProcessor(),
+		processor.NewRXBProcessor(),
+		processor.NewRGXProcessor(),
+		processor.NewRBXProcessor(),
+		processor.NewGRXProcessor(),
+		processor.NewGBXProcessor(),
+		processor.NewBRXProcessor(),
+		processor.NewBGXProcessor(),
+		processor.NewRXGProcessor(),
+		processor.NewGXRProcessor(),
+		processor.NewGXBProcessor(),
+		processor.NewBXRProcessor(),
+		processor.NewBXGProcessor(),
+		processor.NewXRGProcessor(),
+		processor.NewXRBProcessor(),
+		processor.NewXGRProcessor(),
+		processor.NewXBRProcessor(),
+		processor.NewXBGProcessor(),
+	}
 
 	f, err := os.Open(filepath.Clean(imgPath))
 	check(err)
@@ -95,7 +90,7 @@ func process(imgPath string) {
 		k := i
 		go func() {
 			defer wg.Done()
-			processImage(img, imgPath, processors[k].colorProcessor, processors[k].suffix)
+			processImage(img, imgPath, processors[k])
 		}()
 	}
 
@@ -103,13 +98,13 @@ func process(imgPath string) {
 	fmt.Printf("Processing finished\n")
 }
 
-func processImage(img image.Image, imgPath string, colorProcessor processor.ColorProcessor, resultSuffix string) {
-	wImg := processPixels(img, colorProcessor)
-	newImgPath := newFileName(imgPath, resultSuffix)
+func processImage(img image.Image, imgPath string, proc processor.Processor) {
+	wImg := processPixels(img, proc)
+	newImgPath := newFileName(imgPath, proc.Name())
 	export(newImgPath, wImg)
 }
 
-func processPixels(img image.Image, colorProcessor processor.ColorProcessor) image.Image {
+func processPixels(img image.Image, proc processor.Processor) image.Image {
 	size := img.Bounds().Size()
 	rect := image.Rect(0, 0, size.X, size.Y)
 	wImg := image.NewRGBA(rect)
@@ -124,7 +119,7 @@ func processPixels(img image.Image, colorProcessor processor.ColorProcessor) ima
 				panic("Failed to convert color")
 			}
 
-			c, err := colorProcessor(originalColor)
+			c, err := proc.Process(originalColor)
 			check(err)
 
 			wImg.Set(x, y, c)

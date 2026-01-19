@@ -24,7 +24,7 @@ var gbrCmd = &cobra.Command{
 	Short: "Swap colors from RGB to GBR",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GBRColorProcessor, "gbr")
+		rgbProcess(args[0], processor.NewGBRProcessor())
 	},
 }
 
@@ -33,7 +33,7 @@ var grbCmd = &cobra.Command{
 	Short: "Swap colors from RGB to GRB",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GRBColorProcessor, "grb")
+		rgbProcess(args[0], processor.NewGRBProcessor())
 	},
 }
 
@@ -42,7 +42,7 @@ var brgCmd = &cobra.Command{
 	Short: "Swap colors from RGB to BRG",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BRGColorProcessor, "brg")
+		rgbProcess(args[0], processor.NewBRGProcessor())
 	},
 }
 
@@ -51,7 +51,7 @@ var bgrCmd = &cobra.Command{
 	Short: "Swap colors from RGB to BGR",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BGRColorProcessor, "bgr")
+		rgbProcess(args[0], processor.NewBGRProcessor())
 	},
 }
 
@@ -60,7 +60,7 @@ var rbgCmd = &cobra.Command{
 	Short: "Swap colors from RGB to RBG",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RBGColorProcessor, "rbg")
+		rgbProcess(args[0], processor.NewRBGProcessor())
 	},
 }
 
@@ -69,12 +69,13 @@ var rgbAllCmd = &cobra.Command{
 	Short: "Swap colors from RGB to different combinations",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		var processors [5]Processor
-		processors[0] = Processor{suffix: "rbg", colorProcessor: processor.RBGColorProcessor}
-		processors[1] = Processor{suffix: "gbr", colorProcessor: processor.GBRColorProcessor}
-		processors[2] = Processor{suffix: "grb", colorProcessor: processor.GRBColorProcessor}
-		processors[3] = Processor{suffix: "brg", colorProcessor: processor.BRGColorProcessor}
-		processors[4] = Processor{suffix: "bgr", colorProcessor: processor.BGRColorProcessor}
+		processors := []processor.Processor{
+			processor.NewRBGProcessor(),
+			processor.NewGBRProcessor(),
+			processor.NewGRBProcessor(),
+			processor.NewBRGProcessor(),
+			processor.NewBGRProcessor(),
+		}
 
 		f, err := os.Open(args[0])
 		check(err)
@@ -91,7 +92,7 @@ var rgbAllCmd = &cobra.Command{
 			k := i
 			go func() {
 				defer wg.Done()
-				processImage(img, args[0], processors[k].colorProcessor, processors[k].suffix)
+				processImage(img, args[0], processors[k])
 			}()
 		}
 
@@ -99,7 +100,7 @@ var rgbAllCmd = &cobra.Command{
 	},
 }
 
-func rgbProcess(imgPath string, processorFunc processor.ColorProcessor, suffix string) {
+func rgbProcess(imgPath string, proc processor.Processor) {
 	f, err := os.Open(filepath.Clean(imgPath))
 	check(err)
 	defer f.Close() //nolint:errcheck // ignore error for defer close
@@ -108,5 +109,5 @@ func rgbProcess(imgPath string, processorFunc processor.ColorProcessor, suffix s
 
 	check(err)
 
-	processImage(img, imgPath, processorFunc, suffix)
+	processImage(img, imgPath, proc)
 }

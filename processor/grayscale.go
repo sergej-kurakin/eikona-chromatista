@@ -1,15 +1,26 @@
 package processor
 
 import (
-	"fmt"
 	"image/color"
 )
 
-func GrayColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// GrayProcessor converts colors to grayscale using weighted averaging.
+type GrayProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("GrayColorProcessor: failed to convert color to RGBA")
+// NewGrayProcessor creates a new GrayProcessor instance.
+func NewGrayProcessor() *GrayProcessor {
+	return &GrayProcessor{
+		BaseProcessor: BaseProcessor{name: "gray"},
+	}
+}
+
+// Process transforms the pixel to grayscale.
+func (p *GrayProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
 	// Offset colors a little, adjust it to your taste
@@ -18,35 +29,63 @@ func GrayColorProcessor(pixel color.Color) (color.Color, error) {
 	b := float64(originalColor.B) * 0.90722
 	// average
 	grey := uint8((r + g + b) / 3)
-	c := color.RGBA{
-		R: grey, G: grey, B: grey, A: originalColor.A,
-	}
-	return c, nil
+
+	return color.RGBA{R: grey, G: grey, B: grey, A: originalColor.A}, nil
 }
 
-func PhotometricGrayscaleColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
-
-	if !ok {
-		return nil, fmt.Errorf("PhotometricGrayscaleColorProcessor: failed to convert color to RGBA")
-	}
-
-	luminocity := calculateLuminocity(originalColor)
-	c := color.RGBA{
-		R: luminocity, G: luminocity, B: luminocity, A: originalColor.A,
-	}
-
-	return c, nil
+// PhotometricGrayscaleProcessor converts colors using photometric luminosity.
+type PhotometricGrayscaleProcessor struct {
+	BaseProcessor
+	luminosityCalc LuminosityCalculator
 }
 
-func PhotometricGraychromeColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// NewPhotometricGrayscaleProcessor creates a processor with injectable luminosity calculator.
+func NewPhotometricGrayscaleProcessor(calc LuminosityCalculator) *PhotometricGrayscaleProcessor {
+	if calc == nil {
+		calc = DefaultLuminosityCalculator
+	}
+	return &PhotometricGrayscaleProcessor{
+		BaseProcessor:  BaseProcessor{name: "photometric_grayscale"},
+		luminosityCalc: calc,
+	}
+}
 
-	if !ok {
-		return nil, fmt.Errorf("PhotometricGraychromeColorProcessor: failed to convert color to RGBA")
+// Process transforms the pixel to photometric grayscale.
+func (p *PhotometricGrayscaleProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	luminocity := calculateLuminocity(originalColor)
+	luminocity := p.luminosityCalc.Calculate(originalColor)
+	return color.RGBA{R: luminocity, G: luminocity, B: luminocity, A: originalColor.A}, nil
+}
+
+// PhotometricGraychromeProcessor creates posterized grayscale effect.
+type PhotometricGraychromeProcessor struct {
+	BaseProcessor
+	luminosityCalc LuminosityCalculator
+}
+
+// NewPhotometricGraychromeProcessor creates a graychrome processor.
+func NewPhotometricGraychromeProcessor(calc LuminosityCalculator) *PhotometricGraychromeProcessor {
+	if calc == nil {
+		calc = DefaultLuminosityCalculator
+	}
+	return &PhotometricGraychromeProcessor{
+		BaseProcessor:  BaseProcessor{name: "photometric_graychrome"},
+		luminosityCalc: calc,
+	}
+}
+
+// Process transforms the pixel to posterized grayscale.
+func (p *PhotometricGraychromeProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
+	}
+
+	luminocity := p.luminosityCalc.Calculate(originalColor)
 
 	var c color.RGBA
 
@@ -77,11 +116,34 @@ func PhotometricGraychromeColorProcessor(pixel color.Color) (color.Color, error)
 	return c, nil
 }
 
-func PhotometricGraychromeNegativeColorProcessor(pixel color.Color) (color.Color, error) {
-	graychromePixel, err := PhotometricGraychromeColorProcessor(pixel)
+// PhotometricGraychromeNegativeProcessor chains graychrome with negative.
+type PhotometricGraychromeNegativeProcessor struct {
+	BaseProcessor
+	graychrome Processor
+	negative   Processor
+}
+
+// NewPhotometricGraychromeNegativeProcessor creates a processor with injectable dependencies.
+func NewPhotometricGraychromeNegativeProcessor(graychrome, negative Processor) *PhotometricGraychromeNegativeProcessor {
+	if graychrome == nil {
+		graychrome = NewPhotometricGraychromeProcessor(nil)
+	}
+	if negative == nil {
+		negative = NewNegativeProcessor()
+	}
+	return &PhotometricGraychromeNegativeProcessor{
+		BaseProcessor: BaseProcessor{name: "photometric_graychrome_negative"},
+		graychrome:    graychrome,
+		negative:      negative,
+	}
+}
+
+// Process applies graychrome then negative transformation.
+func (p *PhotometricGraychromeNegativeProcessor) Process(pixel color.Color) (color.Color, error) {
+	graychromePixel, err := p.graychrome.Process(pixel)
 	if err != nil {
 		return nil, err
 	}
 
-	return NegativeColorProcessor(graychromePixel)
+	return p.negative.Process(graychromePixel)
 }

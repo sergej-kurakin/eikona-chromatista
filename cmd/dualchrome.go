@@ -40,7 +40,7 @@ var rgxCmd = &cobra.Command{
 	Short: "Limit colors from RGB to RGX",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RGXColorProcessor, "rgx")
+		rgbProcess(args[0], processor.NewRGXProcessor())
 	},
 }
 
@@ -49,7 +49,7 @@ var xgbCmd = &cobra.Command{
 	Short: "Limit colors from RGB to XGB",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XGBColorProcessor, "xgb")
+		rgbProcess(args[0], processor.NewXGBProcessor())
 	},
 }
 
@@ -58,7 +58,7 @@ var rxbCmd = &cobra.Command{
 	Short: "Limit colors from RGB to RXB",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RXBColorProcessor, "rxb")
+		rgbProcess(args[0], processor.NewRXBProcessor())
 	},
 }
 
@@ -67,7 +67,7 @@ var rbxCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to RBX",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RBXColorProcessor, "rbx")
+		rgbProcess(args[0], processor.NewRBXProcessor())
 	},
 }
 
@@ -76,7 +76,7 @@ var grxCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to GRX",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GRXColorProcessor, "grx")
+		rgbProcess(args[0], processor.NewGRXProcessor())
 	},
 }
 
@@ -85,7 +85,7 @@ var gbxCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to GBX",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GBXColorProcessor, "gbx")
+		rgbProcess(args[0], processor.NewGBXProcessor())
 	},
 }
 
@@ -94,7 +94,7 @@ var brxCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to BRX",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BRXColorProcessor, "brx")
+		rgbProcess(args[0], processor.NewBRXProcessor())
 	},
 }
 
@@ -103,7 +103,7 @@ var bgxCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to BGX",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BGXColorProcessor, "bgx")
+		rgbProcess(args[0], processor.NewBGXProcessor())
 	},
 }
 
@@ -112,7 +112,7 @@ var rxgCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to RXG",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RXGColorProcessor, "rxg")
+		rgbProcess(args[0], processor.NewRXGProcessor())
 	},
 }
 
@@ -121,7 +121,7 @@ var gxrCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to GXR",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GXRColorProcessor, "gxr")
+		rgbProcess(args[0], processor.NewGXRProcessor())
 	},
 }
 
@@ -130,7 +130,7 @@ var gxbCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to GXB",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.GXBColorProcessor, "gxb")
+		rgbProcess(args[0], processor.NewGXBProcessor())
 	},
 }
 
@@ -139,7 +139,7 @@ var bxrCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to BXR",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BXRColorProcessor, "bxr")
+		rgbProcess(args[0], processor.NewBXRProcessor())
 	},
 }
 
@@ -148,7 +148,7 @@ var bxgCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to BXG",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.BXGColorProcessor, "bxg")
+		rgbProcess(args[0], processor.NewBXGProcessor())
 	},
 }
 
@@ -157,7 +157,7 @@ var xrgCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to XRG",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XRGColorProcessor, "xrg")
+		rgbProcess(args[0], processor.NewXRGProcessor())
 	},
 }
 
@@ -166,7 +166,7 @@ var xrbCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to XRB",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XRBColorProcessor, "xrb")
+		rgbProcess(args[0], processor.NewXRBProcessor())
 	},
 }
 
@@ -175,7 +175,7 @@ var xgrCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to XGR",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XGRColorProcessor, "xgr")
+		rgbProcess(args[0], processor.NewXGRProcessor())
 	},
 }
 
@@ -184,7 +184,7 @@ var xbrCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to XBR",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XBRColorProcessor, "xbr")
+		rgbProcess(args[0], processor.NewXBRProcessor())
 	},
 }
 
@@ -193,7 +193,7 @@ var xbgCmd = &cobra.Command{
 	Short: "Limit & swap colors from RGB to XBG",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XBGColorProcessor, "xbg")
+		rgbProcess(args[0], processor.NewXBGProcessor())
 	},
 }
 
@@ -202,28 +202,26 @@ var dualchromeAllCmd = &cobra.Command{
 	Short: "Swap colors from RGB to different dualchrome combinations",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		var processors [17]Processor
-		processors[0] = Processor{suffix: "rgx", colorProcessor: processor.RGXColorProcessor}
-		processors[1] = Processor{suffix: "xgb", colorProcessor: processor.XGBColorProcessor}
-		processors[2] = Processor{suffix: "rxb", colorProcessor: processor.RXBColorProcessor}
-
-		processors[3] = Processor{suffix: "rbx", colorProcessor: processor.RBXColorProcessor}
-		processors[4] = Processor{suffix: "grx", colorProcessor: processor.GRXColorProcessor}
-		processors[5] = Processor{suffix: "gbx", colorProcessor: processor.GBXColorProcessor}
-		processors[6] = Processor{suffix: "brx", colorProcessor: processor.BRXColorProcessor}
-		processors[7] = Processor{suffix: "bgx", colorProcessor: processor.BGXColorProcessor}
-
-		processors[8] = Processor{suffix: "rxg", colorProcessor: processor.RXGColorProcessor}
-		processors[9] = Processor{suffix: "gxr", colorProcessor: processor.GXRColorProcessor}
-		processors[10] = Processor{suffix: "gxb", colorProcessor: processor.GXBColorProcessor}
-		processors[11] = Processor{suffix: "bxr", colorProcessor: processor.BXRColorProcessor}
-		processors[11] = Processor{suffix: "bxg", colorProcessor: processor.BXGColorProcessor}
-
-		processors[12] = Processor{suffix: "xrg", colorProcessor: processor.XRGColorProcessor}
-		processors[13] = Processor{suffix: "xrb", colorProcessor: processor.XRBColorProcessor}
-		processors[14] = Processor{suffix: "xgr", colorProcessor: processor.XGRColorProcessor}
-		processors[15] = Processor{suffix: "xbr", colorProcessor: processor.XBRColorProcessor}
-		processors[16] = Processor{suffix: "xbg", colorProcessor: processor.XBGColorProcessor}
+		processors := []processor.Processor{
+			processor.NewRGXProcessor(),
+			processor.NewXGBProcessor(),
+			processor.NewRXBProcessor(),
+			processor.NewRBXProcessor(),
+			processor.NewGRXProcessor(),
+			processor.NewGBXProcessor(),
+			processor.NewBRXProcessor(),
+			processor.NewBGXProcessor(),
+			processor.NewRXGProcessor(),
+			processor.NewGXRProcessor(),
+			processor.NewGXBProcessor(),
+			processor.NewBXRProcessor(),
+			processor.NewBXGProcessor(),
+			processor.NewXRGProcessor(),
+			processor.NewXRBProcessor(),
+			processor.NewXGRProcessor(),
+			processor.NewXBRProcessor(),
+			processor.NewXBGProcessor(),
+		}
 
 		f, err := os.Open(args[0])
 		check(err)
@@ -240,7 +238,7 @@ var dualchromeAllCmd = &cobra.Command{
 			k := i
 			go func() {
 				defer wg.Done()
-				processImage(img, args[0], processors[k].colorProcessor, processors[k].suffix)
+				processImage(img, args[0], processors[k])
 			}()
 		}
 

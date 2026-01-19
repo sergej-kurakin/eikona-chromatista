@@ -1,38 +1,61 @@
 package processor
 
 import (
-	"fmt"
 	"image/color"
 	"math/rand"
 )
 
-func NegativeColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
-
-	if !ok {
-		return nil, fmt.Errorf("NegativeColorProcessor: failed to convert color to RGBA")
-	}
-
-	c := color.RGBA{
-		R: 255 - originalColor.R, G: 255 - originalColor.G, B: 255 - originalColor.B, A: originalColor.A,
-	}
-	return c, nil
+// NegativeProcessor inverts colors.
+type NegativeProcessor struct {
+	BaseProcessor
 }
 
-func SepiaColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// NewNegativeProcessor creates a new NegativeProcessor instance.
+func NewNegativeProcessor() *NegativeProcessor {
+	return &NegativeProcessor{
+		BaseProcessor: BaseProcessor{name: "negative"},
+	}
+}
 
-	if !ok {
-		return nil, fmt.Errorf("SepiaColorProcessor: failed to convert color to RGBA")
+// Process inverts the colors.
+func (p *NegativeProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
+	}
+
+	return color.RGBA{
+		R: 255 - originalColor.R,
+		G: 255 - originalColor.G,
+		B: 255 - originalColor.B,
+		A: originalColor.A,
+	}, nil
+}
+
+// SepiaProcessor applies sepia tone effect.
+type SepiaProcessor struct {
+	BaseProcessor
+}
+
+// NewSepiaProcessor creates a new SepiaProcessor instance.
+func NewSepiaProcessor() *SepiaProcessor {
+	return &SepiaProcessor{
+		BaseProcessor: BaseProcessor{name: "sepia"},
+	}
+}
+
+// Process applies sepia tone effect.
+func (p *SepiaProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
 	tr := 0.393*float32(originalColor.R) + 0.769*float32(originalColor.G) + 0.189*float32(originalColor.B)
 	tg := 0.349*float32(originalColor.R) + 0.686*float32(originalColor.G) + 0.168*float32(originalColor.B)
 	tb := 0.272*float32(originalColor.R) + 0.534*float32(originalColor.G) + 0.131*float32(originalColor.B)
 
-	var r uint8
-	var g uint8
-	var b uint8
+	var r, g, b uint8
 
 	if tr > 255 {
 		r = 255
@@ -50,45 +73,77 @@ func SepiaColorProcessor(pixel color.Color) (color.Color, error) {
 		b = uint8(tb)
 	}
 
-	c := color.RGBA{
-		R: r, G: g, B: b, A: originalColor.A,
-	}
-
-	return c, nil
+	return color.RGBA{R: r, G: g, B: b, A: originalColor.A}, nil
 }
 
-func InfraredProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// InfraredProcessor simulates infrared film effect by swapping R and B.
+type InfraredProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("InfraredProcessor: failed to convert color to RGBA")
+// NewInfraredProcessor creates a new InfraredProcessor instance.
+func NewInfraredProcessor() *InfraredProcessor {
+	return &InfraredProcessor{
+		BaseProcessor: BaseProcessor{name: "infrared"},
+	}
+}
+
+// Process simulates infrared film effect.
+func (p *InfraredProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.B,
 		G: originalColor.G,
 		B: originalColor.R,
 		A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func RandomColorProcessor(pixel color.Color) (color.Color, error) {
-	var processors [12]ColorProcessor
-	processors[0] = GrayColorProcessor
-	processors[1] = RBGColorProcessor
-	processors[2] = GBRColorProcessor
-	processors[3] = GRBColorProcessor
-	processors[4] = BRGColorProcessor
-	processors[5] = BGRColorProcessor
-	processors[6] = XGBColorProcessor
-	processors[7] = RXBColorProcessor
-	processors[8] = RGXColorProcessor
-	processors[9] = RXXColorProcessor
-	processors[10] = XGXColorProcessor
-	processors[11] = XXBColorProcessor
+// RandomProcessor randomly selects from a pool of processors.
+type RandomProcessor struct {
+	BaseProcessor
+	processors []Processor
+	randFunc   func(n int) int
+}
 
-	processorKey := rand.Intn(len(processors))
+// NewRandomProcessor creates a processor with injectable processor pool.
+func NewRandomProcessor(processors []Processor) *RandomProcessor {
+	if processors == nil {
+		// Default pool matching original implementation
+		processors = []Processor{
+			NewGrayProcessor(),
+			NewRBGProcessor(),
+			NewGBRProcessor(),
+			NewGRBProcessor(),
+			NewBRGProcessor(),
+			NewBGRProcessor(),
+			NewXGBProcessor(),
+			NewRXBProcessor(),
+			NewRGXProcessor(),
+			NewRXXProcessor(),
+			NewXGXProcessor(),
+			NewXXBProcessor(),
+		}
+	}
+	return &RandomProcessor{
+		BaseProcessor: BaseProcessor{name: "rnd"},
+		processors:    processors,
+		randFunc:      rand.Intn,
+	}
+}
 
-	return processors[processorKey](pixel)
+// WithRandFunc allows injecting a custom random function for testing.
+func (p *RandomProcessor) WithRandFunc(f func(n int) int) *RandomProcessor {
+	p.randFunc = f
+	return p
+}
+
+// Process randomly selects a processor and applies it.
+func (p *RandomProcessor) Process(pixel color.Color) (color.Color, error) {
+	idx := p.randFunc(len(p.processors))
+	return p.processors[idx].Process(pixel)
 }

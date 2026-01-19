@@ -26,7 +26,7 @@ var grayscaleCmd = &cobra.Command{
 	Short: "Swap colors from RGB to grayscale",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.PhotometricGrayscaleColorProcessor, "grayscale")
+		rgbProcess(args[0], processor.NewPhotometricGrayscaleProcessor(nil))
 	},
 }
 
@@ -35,7 +35,7 @@ var redscaleCmd = &cobra.Command{
 	Short: "Swap colors from RGB to redscale",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.PhotometricRedscaleColorProcessor, "redscale")
+		rgbProcess(args[0], processor.NewPhotometricRedscaleProcessor(nil))
 	},
 }
 
@@ -44,7 +44,7 @@ var greenscaleCmd = &cobra.Command{
 	Short: "Swap colors from RGB to greenscale",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.PhotometricGreenscaleColorProcessor, "greenscale")
+		rgbProcess(args[0], processor.NewPhotometricGreenscaleProcessor(nil))
 	},
 }
 
@@ -53,7 +53,7 @@ var bluescaleCmd = &cobra.Command{
 	Short: "Swap colors from RGB to bluescale",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.PhotometricBluescaleColorProcessor, "bluescale")
+		rgbProcess(args[0], processor.NewPhotometricBluescaleProcessor(nil))
 	},
 }
 
@@ -62,7 +62,7 @@ var redCmd = &cobra.Command{
 	Short: "Limit colors from RGB to reds",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.RXXColorProcessor, "red")
+		rgbProcess(args[0], processor.NewRXXProcessor())
 	},
 }
 
@@ -71,7 +71,7 @@ var greenCmd = &cobra.Command{
 	Short: "Limit colors from RGB to green",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XGXColorProcessor, "green")
+		rgbProcess(args[0], processor.NewXGXProcessor())
 	},
 }
 
@@ -80,7 +80,7 @@ var blueCmd = &cobra.Command{
 	Short: "Limit colors from RGB to blue",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.XXBColorProcessor, "blue")
+		rgbProcess(args[0], processor.NewXXBProcessor())
 	},
 }
 
@@ -89,7 +89,7 @@ var sepiaCmd = &cobra.Command{
 	Short: "Swap colors from RGB to sepia",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		rgbProcess(args[0], processor.SepiaColorProcessor, "sepia")
+		rgbProcess(args[0], processor.NewSepiaProcessor())
 	},
 }
 
@@ -98,15 +98,16 @@ var monochromeAllCmd = &cobra.Command{
 	Short: "Swap colors from RGB to different monochrome combinations",
 	Args:  cobra.ExactArgs(1),
 	Run: func(_ *cobra.Command, args []string) {
-		var processors [8]Processor
-		processors[0] = Processor{suffix: "grayscale", colorProcessor: processor.PhotometricGrayscaleColorProcessor}
-		processors[1] = Processor{suffix: "redscale", colorProcessor: processor.PhotometricRedscaleColorProcessor}
-		processors[2] = Processor{suffix: "greenscale", colorProcessor: processor.PhotometricGreenscaleColorProcessor}
-		processors[3] = Processor{suffix: "bluescale", colorProcessor: processor.PhotometricBluescaleColorProcessor}
-		processors[4] = Processor{suffix: "red", colorProcessor: processor.RXXColorProcessor}
-		processors[5] = Processor{suffix: "green", colorProcessor: processor.XGXColorProcessor}
-		processors[6] = Processor{suffix: "blue", colorProcessor: processor.XXBColorProcessor}
-		processors[7] = Processor{suffix: "sepia", colorProcessor: processor.SepiaColorProcessor}
+		processors := []processor.Processor{
+			processor.NewPhotometricGrayscaleProcessor(nil),
+			processor.NewPhotometricRedscaleProcessor(nil),
+			processor.NewPhotometricGreenscaleProcessor(nil),
+			processor.NewPhotometricBluescaleProcessor(nil),
+			processor.NewRXXProcessor(),
+			processor.NewXGXProcessor(),
+			processor.NewXXBProcessor(),
+			processor.NewSepiaProcessor(),
+		}
 
 		f, err := os.Open(args[0])
 		check(err)
@@ -123,7 +124,7 @@ var monochromeAllCmd = &cobra.Command{
 			k := i
 			go func() {
 				defer wg.Done()
-				processImage(img, args[0], processors[k].colorProcessor, processors[k].suffix)
+				processImage(img, args[0], processors[k])
 			}()
 		}
 

@@ -1,240 +1,437 @@
 package processor
 
 import (
-	"fmt"
 	"image/color"
 )
 
-func XGBColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// XGBProcessor masks the red channel to zero.
+type XGBProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("XGBColorProcessor: failed to convert color to RGBA")
+// NewXGBProcessor creates a new XGBProcessor instance.
+func NewXGBProcessor() *XGBProcessor {
+	return &XGBProcessor{
+		BaseProcessor: BaseProcessor{name: "xgb"},
+	}
+}
+
+// Process masks the red channel to zero.
+func (p *XGBProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: 0, G: originalColor.G, B: originalColor.B, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func RXBColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// RXBProcessor masks the green channel to zero.
+type RXBProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("RXBColorProcessor: failed to convert color to RGBA")
+// NewRXBProcessor creates a new RXBProcessor instance.
+func NewRXBProcessor() *RXBProcessor {
+	return &RXBProcessor{
+		BaseProcessor: BaseProcessor{name: "rxb"},
+	}
+}
+
+// Process masks the green channel to zero.
+func (p *RXBProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.R, G: 0, B: originalColor.B, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func RGXColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// RGXProcessor masks the blue channel to zero.
+type RGXProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("RGXColorProcessor: failed to convert color to RGBA")
+// NewRGXProcessor creates a new RGXProcessor instance.
+func NewRGXProcessor() *RGXProcessor {
+	return &RGXProcessor{
+		BaseProcessor: BaseProcessor{name: "rgx"},
+	}
+}
+
+// Process masks the blue channel to zero.
+func (p *RGXProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.R, G: originalColor.G, B: 0, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func RBXColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// RBXProcessor swaps G and B, then masks blue to zero.
+type RBXProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("RBXColorProcessor: failed to convert color to RGBA")
+// NewRBXProcessor creates a new RBXProcessor instance.
+func NewRBXProcessor() *RBXProcessor {
+	return &RBXProcessor{
+		BaseProcessor: BaseProcessor{name: "rbx"},
+	}
+}
+
+// Process swaps G and B, then masks blue to zero.
+func (p *RBXProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.R, G: originalColor.B, B: 0, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func GRXColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// GRXProcessor swaps R and G, then masks blue to zero.
+type GRXProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("GRXColorProcessor: failed to convert color to RGBA")
+// NewGRXProcessor creates a new GRXProcessor instance.
+func NewGRXProcessor() *GRXProcessor {
+	return &GRXProcessor{
+		BaseProcessor: BaseProcessor{name: "grx"},
+	}
+}
+
+// Process swaps R and G, then masks blue to zero.
+func (p *GRXProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.G, G: originalColor.R, B: 0, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func GBXColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// GBXProcessor moves G to R, B to G, masks blue to zero.
+type GBXProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("GBXColorProcessor: failed to convert color to RGBA")
+// NewGBXProcessor creates a new GBXProcessor instance.
+func NewGBXProcessor() *GBXProcessor {
+	return &GBXProcessor{
+		BaseProcessor: BaseProcessor{name: "gbx"},
+	}
+}
+
+// Process moves G to R, B to G, masks blue to zero.
+func (p *GBXProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.G, G: originalColor.B, B: 0, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func BRXColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// BRXProcessor moves B to R, R to G, masks blue to zero.
+type BRXProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("BRXColorProcessor: failed to convert color to RGBA")
+// NewBRXProcessor creates a new BRXProcessor instance.
+func NewBRXProcessor() *BRXProcessor {
+	return &BRXProcessor{
+		BaseProcessor: BaseProcessor{name: "brx"},
+	}
+}
+
+// Process moves B to R, R to G, masks blue to zero.
+func (p *BRXProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.B, G: originalColor.R, B: 0, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func BGXColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// BGXProcessor moves B to R, G stays, masks blue to zero.
+type BGXProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("BGXColorProcessor: failed to convert color to RGBA")
+// NewBGXProcessor creates a new BGXProcessor instance.
+func NewBGXProcessor() *BGXProcessor {
+	return &BGXProcessor{
+		BaseProcessor: BaseProcessor{name: "bgx"},
+	}
+}
+
+// Process moves B to R, G stays, masks blue to zero.
+func (p *BGXProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.B, G: originalColor.G, B: 0, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func RXGColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// RXGProcessor keeps R, masks green to zero, moves G to B.
+type RXGProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("RXGColorProcessor: failed to convert color to RGBA")
+// NewRXGProcessor creates a new RXGProcessor instance.
+func NewRXGProcessor() *RXGProcessor {
+	return &RXGProcessor{
+		BaseProcessor: BaseProcessor{name: "rxg"},
+	}
+}
+
+// Process keeps R, masks green to zero, moves G to B.
+func (p *RXGProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.R, G: 0, B: originalColor.G, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func GXRColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// GXRProcessor moves G to R, masks green to zero, R to B.
+type GXRProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("GXRColorProcessor: failed to convert color to RGBA")
+// NewGXRProcessor creates a new GXRProcessor instance.
+func NewGXRProcessor() *GXRProcessor {
+	return &GXRProcessor{
+		BaseProcessor: BaseProcessor{name: "gxr"},
+	}
+}
+
+// Process moves G to R, masks green to zero, R to B.
+func (p *GXRProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.G, G: 0, B: originalColor.R, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func GXBColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// GXBProcessor moves G to R, masks green to zero, B stays.
+type GXBProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("GXBColorProcessor: failed to convert color to RGBA")
+// NewGXBProcessor creates a new GXBProcessor instance.
+func NewGXBProcessor() *GXBProcessor {
+	return &GXBProcessor{
+		BaseProcessor: BaseProcessor{name: "gxb"},
+	}
+}
+
+// Process moves G to R, masks green to zero, B stays.
+func (p *GXBProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.G, G: 0, B: originalColor.B, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func BXRColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// BXRProcessor moves B to R, masks green to zero, R to B.
+type BXRProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("BXRColorProcessor: failed to convert color to RGBA")
+// NewBXRProcessor creates a new BXRProcessor instance.
+func NewBXRProcessor() *BXRProcessor {
+	return &BXRProcessor{
+		BaseProcessor: BaseProcessor{name: "bxr"},
+	}
+}
+
+// Process moves B to R, masks green to zero, R to B.
+func (p *BXRProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.B, G: 0, B: originalColor.R, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func BXGColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// BXGProcessor moves B to R, masks green to zero, G to B.
+type BXGProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("BXGColorProcessor: failed to convert color to RGBA")
+// NewBXGProcessor creates a new BXGProcessor instance.
+func NewBXGProcessor() *BXGProcessor {
+	return &BXGProcessor{
+		BaseProcessor: BaseProcessor{name: "bxg"},
+	}
+}
+
+// Process moves B to R, masks green to zero, G to B.
+func (p *BXGProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: originalColor.B, G: 0, B: originalColor.G, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func XRGColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// XRGProcessor masks red to zero, R to G, G to B.
+type XRGProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("XRGColorProcessor: failed to convert color to RGBA")
+// NewXRGProcessor creates a new XRGProcessor instance.
+func NewXRGProcessor() *XRGProcessor {
+	return &XRGProcessor{
+		BaseProcessor: BaseProcessor{name: "xrg"},
+	}
+}
+
+// Process masks red to zero, R to G, G to B.
+func (p *XRGProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: 0, G: originalColor.R, B: originalColor.G, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func XRBColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// XRBProcessor masks red to zero, R to G, B stays.
+type XRBProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("XRBColorProcessor: failed to convert color to RGBA")
+// NewXRBProcessor creates a new XRBProcessor instance.
+func NewXRBProcessor() *XRBProcessor {
+	return &XRBProcessor{
+		BaseProcessor: BaseProcessor{name: "xrb"},
+	}
+}
+
+// Process masks red to zero, R to G, B stays.
+func (p *XRBProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: 0, G: originalColor.R, B: originalColor.B, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func XGRColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// XGRProcessor masks red to zero, G stays, R to B.
+type XGRProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("XGRColorProcessor: failed to convert color to RGBA")
+// NewXGRProcessor creates a new XGRProcessor instance.
+func NewXGRProcessor() *XGRProcessor {
+	return &XGRProcessor{
+		BaseProcessor: BaseProcessor{name: "xgr"},
+	}
+}
+
+// Process masks red to zero, G stays, R to B.
+func (p *XGRProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: 0, G: originalColor.G, B: originalColor.R, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func XBRColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// XBRProcessor masks red to zero, B to G, R to B.
+type XBRProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("XBRColorProcessor: failed to convert color to RGBA")
+// NewXBRProcessor creates a new XBRProcessor instance.
+func NewXBRProcessor() *XBRProcessor {
+	return &XBRProcessor{
+		BaseProcessor: BaseProcessor{name: "xbr"},
+	}
+}
+
+// Process masks red to zero, B to G, R to B.
+func (p *XBRProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: 0, G: originalColor.B, B: originalColor.R, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
 
-func XBGColorProcessor(pixel color.Color) (color.Color, error) {
-	originalColor, ok := color.RGBAModel.Convert(pixel).(color.RGBA)
+// XBGProcessor masks red to zero, B to G, G to B.
+type XBGProcessor struct {
+	BaseProcessor
+}
 
-	if !ok {
-		return nil, fmt.Errorf("XBGColorProcessor: failed to convert color to RGBA")
+// NewXBGProcessor creates a new XBGProcessor instance.
+func NewXBGProcessor() *XBGProcessor {
+	return &XBGProcessor{
+		BaseProcessor: BaseProcessor{name: "xbg"},
+	}
+}
+
+// Process masks red to zero, B to G, G to B.
+func (p *XBGProcessor) Process(pixel color.Color) (color.Color, error) {
+	originalColor, err := p.ToRGBA(pixel)
+	if err != nil {
+		return nil, err
 	}
 
-	c := color.RGBA{
+	return color.RGBA{
 		R: 0, G: originalColor.B, B: originalColor.G, A: originalColor.A,
-	}
-	return c, nil
+	}, nil
 }
