@@ -25,6 +25,11 @@ fmt: deps
 lint: deps
 	golangci-lint run
 
+## test: run all tests
+.PHONY: test
+test:
+	go test ./... -v
+
 ## deps: tidy modfiles and fill vendors
 .PHONY: deps
 deps:
